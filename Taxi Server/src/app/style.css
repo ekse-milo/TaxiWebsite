@@ -1,0 +1,233 @@
+body {
+    background-color: #FFF5E6;
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    padding: 20px 25px;
+    background-color: #FFF8E7;
+    border-bottom: 1px solid #E8DCC8;
+}
+
+.nav-link {
+    margin: 0 5px;
+    padding: 10px 10px;
+    color: #333333;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.nav-link:hover {
+    background-color: #FFD54F;
+    color: #004D40;
+}
+
+.hero-section {
+    padding: 220px 50px;
+    background-image: url('/assets/hero_bg.png');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title {
+    font-size: 56px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.hero-subtitle {
+    font-size: 24px;
+    color: #FFD54F;
+}
+
+.hero-text {
+    color: #eee;
+    max-width: 600px;
+    margin: 20px auto;
+    font-weight: 400;
+}
+
+.section-divider {
+    border: 1px solid #B2EBF2;
+    margin: 60px;
+}
+
+.section-title {
+    color: #004D40;
+}
+
+.section-subtitle {
+    color: #000000;
+}
+
+.cars-section {
+    padding: 50px;
+    background-color: #FFF9C4;
+}
+
+.cars-table {
+    width: 90%;
+    max-width: 1000px;
+}
+
+.car-card {
+    padding: 35px 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    margin: 70px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    min-width: 200px;
+}
+
+.car-card img {
+    width: 300px;
+    height: 220px;
+    object-fit: contain;
+}
+
+.car-desc {
+    color: #000000;
+}
+
+.car-price {
+    color: #26A69A;
+    font-weight: bold;
+}
+
+.btn-select {
+    padding: 10px 20px;
+    background-color: #FFD54F;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-select:hover {
+    background-color: #E6C25E;
+}
+
+.packages-section {
+    padding: 50px;
+    background-color: #FFF5E6;
+}
+
+.packages-table {
+    width: 90%;
+    max-width: 900px;
+}
+
+.package-card {
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    margin: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    vertical-align: top;
+}
+
+.badge {
+    background-color: #FFD54F;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.package-desc {
+    color: #666;
+}
+
+.features-list {
+    color: #000000;
+}
+
+.btn-outline {
+    padding: 12px 30px;
+    border: 2px solid #FFD54F;
+    background-color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #000000;
+}
+
+.btn-outline:hover {
+    background-color: #FFD54F;
+}
+
+.reviews-section {
+    padding: 50px;
+    background-color: #FFF9C4;
+    margin-right: 30px;
+}
+
+.reviews-table {
+    width: 90%;
+    max-width: 900px;
+}
+
+.review-card {
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    margin: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.review-quote {
+    font-style: italic;
+    color: #555;
+}
+
+.review-author {
+    font-weight: bold;
+    color: #004D40;
+}
+
+.footer {
+    padding: 60px 20px;
+    background-color: #004D40;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.footer h3 {
+    margin-bottom: 5px;
+    color: #FFD54F;
+    font-size: 28px;
+}
+
+.footer-tagline {
+    color: #B2EBF2;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.footer-contact-info {
+    margin-bottom: 30px;
+}
+
+.footer-contact-info p {
+    margin: 8px 0;
+}
+
+.footer-divider {
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    width: 60%;
+    margin: 30px auto;
+}
+
+.footer-copyright {
+    color: #80CBC4;
+    font-size: 14px;
+}
+.nameColor{
+    color: #000000;
+}
