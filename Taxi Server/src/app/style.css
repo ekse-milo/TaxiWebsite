@@ -231,3 +231,44 @@ body {
 .nameColor{
     color: #000000;
 }
+
+@media screen and (max-width: 1600px) {
+    /*force the table and body to stop behaving like a table*/
+    #cars table, 
+    #cars tbody, 
+    #cars tr,
+    #packages table, 
+    #packages tbody, 
+    #packages tr,
+    #reviews table, 
+    #reviews tbody, 
+    #reviews tr {
+        display: block; 
+        width: 100%;
+    }
+
+    /*individual cards*/
+    #cars td.car-card,
+    #packages td.package-card,
+    #reviews td.review-card {
+        display: block;
+        /*remove any inherited table padding*/
+        padding: 20px; 
+        /*ensure no extra height is forced*/
+        height: auto;
+        width: 90%;
+        margin: 10px auto; /*centers the card and adds small gap between cards*/
+        
+        /*white card background effect for the image*/
+        background: #fff;
+        border-radius: 8px;
+    }
+
+    .car-card img {
+        width: 100% !important;   /*force image to fill the entire card width*/
+        max-width: 250px;         /*prevents image from getting too large*/
+        height: auto !important;  /*maintain aspect ratio*/
+        display: block;
+        margin: 0 auto 10px auto; /*center image and adds space below*/
+    }
+}
