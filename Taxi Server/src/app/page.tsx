@@ -8,10 +8,11 @@ import { useEffect } from "react";
 export default function Home() {
   useEffect(() => {
     const bookButtons = document.querySelectorAll('.btn-outline');
-    const whatsappNumber = "910000000000";
 
     const handleClick = (e: Event) => {
-      window.location.href = '/form';
+      const target = e.currentTarget as HTMLElement;
+      const car = target.getAttribute('data-car');
+      window.location.href = `/form?car=${car || ''}`;
     };
 
     bookButtons.forEach(button => {
@@ -56,21 +57,25 @@ export default function Home() {
             <Image src="/assets/Hatch.png" alt="Hatchback" height={100} width={150} />
             <h3 className="nameColor">Hatchback</h3>
             <p className="car-price">Starts ₹1200 / day</p>
+            <button className="btn-outline" data-car="Hatchback">Book</button>
           </div>
           <div className="car-card">
             <Image src="/assets/Sedan.png" alt="Sedan" height={100} width={150} />
             <h3 className="nameColor">Sedan</h3>
             <p className="car-price">Starts ₹1500 / day</p>
+            <button className="btn-outline" data-car="Sedan">Book</button>
           </div>
           <div className="car-card">
             <Image src="/assets/MUV.png" alt="MUV" height={100} width={150} />
             <h3 className="nameColor">MUV</h3>
             <p className="car-price">Starts ₹2200 / day</p>
+            <button className="btn-outline" data-car="MUV">Book</button>
           </div>
           <div className="car-card">
             <Image src="/assets/SUV.png" alt="SUV" height={100} width={150} />
             <h3 className="nameColor">SUV</h3>
             <p className="car-price">Starts ₹3000 / day</p>
+            <button className="btn-outline" data-car="SUV">Book</button>
           </div>
         </div>
       </div>
@@ -84,17 +89,14 @@ export default function Home() {
           <div className="package-card">
             <h3 className="nameColor">Airport Transfer</h3>
             <p className="package-desc">Hassle-free pickup and drop to Dabolim or Mopa Airport.</p>
-            <button className="btn-outline">Book</button>
           </div>
           <div className="package-card">
             <h3 className="nameColor">City Tour</h3>
             <p className="package-desc">Explore Panjim, Old Goa Churches, and Shopping streets.</p>
-            <button className="btn-outline">Book</button>
           </div>
           <div className="package-card">
             <h3 className="nameColor">Sightseeing</h3>
             <p className="package-desc">North or South Goa beaches, Forts, and Waterfalls.</p>
-            <button className="btn-outline">Book</button>
           </div>
         </div>
       </div>
