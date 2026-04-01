@@ -132,8 +132,8 @@ export default function Home() {
           <p><b>Email: </b>Email</p>
           <p><b>Address: </b>Address</p>
         </div>
-
-        <hr className="footer-divider" />
+        {/* 
+        <hr className="footer-divider" /> */}
         <p className="footer-copyright">&copy; All rights reserved.</p>
       </footer>
     </>

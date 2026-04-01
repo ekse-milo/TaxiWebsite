@@ -1,10 +1,45 @@
+<<<<<<< HEAD
+.form-header {
+    background-color: #005577;
+    color: white;
+    width: 100%;
+    padding: 30px 0;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.form-header h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+    .form-header {
+        padding: 20px 0;
+    }
+    .form-header h1 {
+        font-size: 24px;
+    }
+}
+
+
+=======
 /* Existing CSS */
+>>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
 .booking-body {
     margin: 0;
     background-color: #fff9db;
     height: 100vh;
     overflow: hidden;
+<<<<<<< HEAD
+=======
     /* Prevent scrolling */
+>>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
 }
 
 * {
@@ -14,9 +49,16 @@
 
 .booking-section {
     width: 100%;
+<<<<<<< HEAD
+    min-height: 100vh;
+    padding-top: 120px;
+    /* Space for the fixed header */
+    padding-bottom: 20px;
+=======
     height: 100vh;
     padding: 10px;
     /* Reduced from 20px */
+>>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,7 +109,14 @@
     padding: 12px 20px;
     /* Reduced from 18px 26px */
     background: #fff;
+    transition: all 0.2s ease;
 }
+
+.input-box.has-error {
+    border-color: #d32f2f;
+    background-color: #fff9f9;
+}
+
 
 
 .input-box input {
@@ -271,10 +320,18 @@
     }
 
     .address-row {
-        flex-direction: row;
-        gap: 5px;
+        flex-direction: column;
+        gap: 15px;
     }
 
+<<<<<<< HEAD
+    .swap-icon {
+        transform: rotate(90deg);
+        margin: 5px 0;
+    }
+
+=======
+>>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
 
     .input-box {
         padding: 8px 8px;
@@ -397,8 +454,15 @@
     user-select: none;
     position: relative;
     border: 1px solid transparent;
+<<<<<<< HEAD
+    color: #333;
 }
 
+
+=======
+}
+
+>>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
 .calendar-day:hover:not(.disabled):not(.occupied) {
     background: #e3f2fd;
     color: #1976d2;
@@ -443,6 +507,26 @@
     gap: 12px;
 }
 
+<<<<<<< HEAD
+.calendar-cancel-btn {
+    padding: 10px 24px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #666;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.calendar-cancel-btn:hover {
+    background-color: #f8f8f8;
+    color: #333;
+    border-color: #ccc;
+}
+
+
+=======
 .calendar-close-btn {
     padding: 10px 20px;
     border-radius: 20px;
@@ -452,6 +536,7 @@
     font-weight: 600;
 }
 
+>>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
 .calendar-confirm-btn {
     padding: 10px 24px;
     border-radius: 20px;

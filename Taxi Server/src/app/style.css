@@ -1,15 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400;500;600;700&display=swap');
 
+html {
+    overscroll-behavior-y: none;
+}
+
 body {
     background-color: #FAFAFA;
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 .header {
-    padding: 15px 25px;
+    padding: 25px 25px;
     background-color: #005577;
     border-bottom: 1px solid #E8DCC8;
     position: sticky;
@@ -21,7 +26,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: 98%;
     margin: 0 auto;
 }
 
@@ -32,7 +37,7 @@ body {
 }
 
 .nav-link {
-    margin: 5px;
+    margin: 5px 10px;
     padding: 8px 12px;
     color: #fdee00;
     text-decoration: none;
@@ -40,16 +45,17 @@ body {
     font-family: 'Roboto Mono', monospace;
     border-radius: 30px;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .nav-link:hover {
-    background-color: #FFF176;
     color: #004D40;
+    background-color: #FFF176;
 }
 
 .hero-section {
-    padding: 150px 20px;
+    padding: 160px 20px;
+    /* Slightly improved size */
     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/assets/hero_bg.png');
     background-size: cover;
     background-position: center;
@@ -59,7 +65,8 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(32px, 8vw, 56px);
+    font-size: clamp(38px, 9vw, 64px);
+    /* Improved size */
     color: #fff;
     margin-bottom: 10px;
     font-family: 'Poppins', sans-serif;
@@ -67,7 +74,8 @@ body {
 }
 
 .hero-subtitle {
-    font-size: clamp(18px, 4vw, 24px);
+    font-size: clamp(20px, 4.5vw, 28px);
+    /* Improved size */
     color: #FFF176;
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
@@ -75,10 +83,12 @@ body {
 
 .hero-text {
     color: #eee;
-    max-width: 600px;
+    max-width: 650px;
+    /* Slightly improved size */
     margin: 20px auto;
     font-weight: 400;
-    font-size: clamp(14px, 3vw, 16px);
+    font-size: clamp(16px, 3.2vw, 18px);
+    /* Improved size */
 }
 
 .section-divider {
@@ -89,26 +99,55 @@ body {
 
 .section-title {
     color: #004D40;
-    font-size: clamp(24px, 5vw, 32px);
+    font-size: clamp(28px, 6vw, 38px);
+    /* Improved size */
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .section-subtitle {
     color: #333;
     margin-bottom: 30px;
-    font-size: clamp(14px, 3vw, 16px);
+    font-size: clamp(15px, 3vw, 17px);
+    /* Improved size */
+    text-align: center;
 }
 
-.cars-section,
-.packages-section,
+.cars-section {
+    padding: 60px 20px;
+    background-color: #FFF9C4;
+    text-align: center;
+}
+
+.packages-section {
+    padding: 60px 20px;
+    background-color: #FFF9C4;
+    text-align: center;
+}
+
 .reviews-section {
     padding: 60px 20px;
     background-color: #FFF9C4;
     text-align: center;
 }
 
-.cars-container,
-.packages-container,
+.cars-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin: 0 auto;
+}
+
+.packages-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .reviews-container {
     display: flex;
     flex-wrap: wrap;
@@ -118,195 +157,159 @@ body {
     margin: 0 auto;
 }
 
-.car-card,
-.package-card,
+.car-card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 35px;
+    /* Slightly improved size */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    flex: 1 1 300px;
+    max-width: 360px;
+    /* Improved size */
+}
+
+.package-card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 35px;
+    /* Slightly improved size */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    flex: 1 1 300px;
+    max-width: 360px;
+    /* Improved size */
+}
+
 .review-card {
     background-color: #fff;
     border-radius: 15px;
-    padding: 30px;
+    padding: 35px;
+    /* Slightly improved size */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    flex: 1 1 300px;
-    max-width: 350px;
     transition: transform 0.3s ease;
+    flex: 1 1 300px;
+    max-width: 360px;
+    /* Improved size */
 }
 
-.car-card:hover,
-.package-card:hover,
+.car-card:hover {
+    transform: translateY(-5px);
+}
+
+.package-card:hover {
+    transform: translateY(-5px);
+}
+
 .review-card:hover {
     transform: translateY(-5px);
 }
 
 .car-card img {
-    width: 100%;
-    height: auto;
-    max-height: 150px;
+    width: 90%;
+    /* Improved size */
+    height: 180px;
+    /* Improved size */
     object-fit: contain;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    /* Slightly improved size */
 }
 
 .car-price {
     color: #26A69A;
     font-weight: 700;
+    margin-top: 15px;
+    /* Slightly improved size */
     font-size: 1.1rem;
-    margin-top: 10px;
+    /* Improved size */
 }
 
-.package-desc {
-    color: #666;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
+.nameColor {
+    font-size: 1.4rem;
+    /* Improved size */
+    margin: 10px 0;
+    color: #000000;
+}
+
+.package-desc,
+.review-quote {
+    color: #555;
+    margin-bottom: 25px;
+    /* Slightly improved size */
+    font-size: 15px;
+    /* Improved size */
+}
+
+.review-author {
+    font-weight: 700;
+    color: #004D40;
+    font-size: 15px;
+    /* Improved size */
 }
 
 .btn-outline {
-    padding: 12px 25px;
+    padding: 14px 30px;
+    /* Improved size */
     border: 2px solid #FFF176;
     background-color: white;
+    color: #000000;
     border-radius: 30px;
     cursor: pointer;
     font-weight: 700;
-    color: #000;
-    transition: all 0.3s ease;
+    font-size: 15px;
+    /* Improved size */
+    transition: background-color 0.3s ease;
 }
 
 .btn-outline:hover {
     background-color: #FFF176;
 }
 
-.review-quote {
-    font-style: italic;
-    color: #555;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.review-author {
-    font-weight: 700;
-    color: #004D40;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.review-author::before {
-    content: '';
-    width: 20px;
-    height: 2px;
-    background-color: #FFF176;
-}
-
 .footer {
-    padding: 60px 20px;
+    padding: 80px 20px;
+    /* Improved size */
     background-color: #005577;
     color: #fff;
     text-align: center;
 }
 
 .footer h3 {
-    color: #FFF176;
-    font-size: 28px;
-    margin-bottom: 10px;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
 }
 
 .footer-tagline {
-    color: #B2EBF2;
-    margin-bottom: 30px;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
 }
 
 .footer-contact-info p {
-    margin: 10px 0;
-}
-
-.footer-divider {
-    border: 0.5px solid rgba(255, 255, 255, 0.1);
-    width: 50%;
-    margin: 30px auto;
+    font-size: 1.1rem;
+    margin: 8px 0;
 }
 
 .footer-copyright {
-    color: #80CBC4;
-    font-size: 14px;
-}
-
-.nameColor {
-    color: #000;
-    margin: 10px 0;
+    font-size: 1rem;
+    margin-top: 30px;
 }
 
 @media (max-width: 900px) {
-    .header-container {
-        flex-direction: row;
-        padding: 5px 0;
-    }
-
-    .nav {
-        gap: 2px;
-    }
-
-    .nav-link {
-        font-size: 11px;
-        padding: 5px 8px;
-        margin: 2px;
-    }
 
     .cars-container,
     .packages-container,
     .reviews-container {
         flex-wrap: nowrap;
-        justify-content: flex-start;
         overflow-x: auto;
-        padding-bottom: 20px;
-        -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
-        gap: 15px;
-    }
-
-    .cars-container::-webkit-scrollbar,
-    .packages-container::-webkit-scrollbar,
-    .reviews-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .cars-container,
-    .packages-container,
-    .reviews-container {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+        padding-bottom: 20px;
+        /* To prevent scrollbar overlap */
     }
 
     .car-card,
     .package-card,
     .review-card {
-        flex: 0 0 280px;
-        max-width: 280px;
+        flex: 0 0 290px;
+        max-width: 290px;
         scroll-snap-align: center;
-        margin: 0;
-    }
-
-    .hero-section {
-        padding: 100px 20px;
-    }
-
-    .hero-title {
-        font-size: 32px;
-    }
-
-    .section-divider {
-        margin: 30px auto;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .car-card,
-    .package-card,
-    .review-card {
-        flex: 0 0 85vw;
-        max-width: 85vw;
-    }
-
-    .header-container {
-        justify-content: center;
-        flex-wrap: wrap;
     }
 }
