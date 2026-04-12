@@ -1,37 +1,62 @@
 'use client';
 
 import Image from "next/image";
-import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import './style.css';
-import { useEffect } from "react";
 
 export default function Home() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
+
+  // ✅ Single scroll effect (clean + correct)
   useEffect(() => {
-    const bookButtons = document.querySelectorAll('.btn-outline');
+    // Force scroll to top on refresh
+    window.scrollTo(0, 0);
 
-    const handleClick = (e: Event) => {
-      const target = e.currentTarget as HTMLElement;
-      const car = target.getAttribute('data-car');
-      window.location.href = `/form?car=${car || ''}`;
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
     };
 
-    bookButtons.forEach(button => {
-      button.addEventListener('click', handleClick);
-    });
+    handleScroll(); // run once on load
 
-    return () => {
-      bookButtons.forEach(button => {
-        button.removeEventListener('click', handleClick);
-      });
-    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // ✅ Navigation handler
+  const handleBooking = (car: string) => {
+    console.log("Checking connection... Online status:", navigator.onLine);
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      window.dispatchEvent(new CustomEvent('startConnectionCheck', { detail: { duration: 3000 } }));
+      return;
+    }
+    router.push(`/form?car=${encodeURIComponent(car)}`);
+  };
+
+  const cars = [
+    { name: "Hatchback", price: 1200, img: "Hatch" },
+    { name: "Sedan", price: 1500, img: "Sedan" },
+    { name: "MUV", price: 2200, img: "MUV" },
+    { name: "SUV", price: 3000, img: "SUV" },
+  ];
+
   return (
     <>
-      <header className="header">
+      {/* Header */}
+      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           <div className="logo">
             <Image src="/logo.png" alt="Website Logo" height={40} width={40} />
           </div>
+
+          <input type="checkbox" id="menu-toggle" className="menu-checkbox" />
+          <label htmlFor="menu-toggle" className="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
           <nav className="nav">
             <a href="#cars" className="nav-link">OUR FLEET</a>
             <a href="#packages" className="nav-link">PACKAGES</a>
@@ -41,100 +66,129 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="hero-section">
+      {/* Hero */}
+      <section className="hero-section">
         <h1 className="hero-title">Experience Goa's Vibes</h1>
         <h2 className="hero-subtitle">With Comfortable Rides</h2>
-        <p className="hero-text">From sun-kissed beaches to heritage streets. We drive, you relax.</p>
-      </div>
+        <p className="hero-text">
+          From sun-kissed beaches to heritage streets. We drive, you relax.
+        </p>
+      </section>
 
       <hr className="section-divider" />
 
-      <div id="cars" className="cars-section">
-        <h2 className="section-title">CHOOSE YOUR RIDE</h2>
-        <p className="section-subtitle">Comfortable, Clean, and AC Cabs for every group size.</p>
-        <div className="cars-container">
-          <div className="car-card">
-            <Image src="/assets/Hatch.png" alt="Hatchback" height={100} width={150} />
-            <h3 className="nameColor">Hatchback</h3>
-            <p className="car-price">Starts ₹1200 / day</p>
-            <button className="btn-outline" data-car="Hatchback">Book</button>
-          </div>
-          <div className="car-card">
-            <Image src="/assets/Sedan.png" alt="Sedan" height={100} width={150} />
-            <h3 className="nameColor">Sedan</h3>
-            <p className="car-price">Starts ₹1500 / day</p>
-            <button className="btn-outline" data-car="Sedan">Book</button>
-          </div>
-          <div className="car-card">
-            <Image src="/assets/MUV.png" alt="MUV" height={100} width={150} />
-            <h3 className="nameColor">MUV</h3>
-            <p className="car-price">Starts ₹2200 / day</p>
-            <button className="btn-outline" data-car="MUV">Book</button>
-          </div>
-          <div className="car-card">
-            <Image src="/assets/SUV.png" alt="SUV" height={100} width={150} />
-            <h3 className="nameColor">SUV</h3>
-            <p className="car-price">Starts ₹3000 / day</p>
-            <button className="btn-outline" data-car="SUV">Book</button>
-          </div>
-        </div>
-      </div>
-
-      <hr className="section-divider" />
-
-      <div id="packages" className="packages-section">
+      {/* Packages */}
+      <section id="packages" className="packages-section">
         <h2 className="section-title">POPULAR PACKAGES</h2>
-        <p className="section-subtitle">Curated trips for the best Goan experience.</p>
+        <p className="section-subtitle">
+          Curated trips for the best Goan experience.
+        </p>
+
         <div className="packages-container">
           <div className="package-card">
             <h3 className="nameColor">Airport Transfer</h3>
-            <p className="package-desc">Hassle-free pickup and drop to Dabolim or Mopa Airport.</p>
+            <p className="package-desc">
+              Hassle-free pickup and drop to Dabolim or Mopa Airport.
+            </p>
           </div>
+
           <div className="package-card">
             <h3 className="nameColor">City Tour</h3>
-            <p className="package-desc">Explore Panjim, Old Goa Churches, and Shopping streets.</p>
+            <p className="package-desc">
+              Explore Panjim, Old Goa Churches, and Shopping streets.
+            </p>
           </div>
+
           <div className="package-card">
             <h3 className="nameColor">Sightseeing</h3>
-            <p className="package-desc">North or South Goa beaches, Forts, and Waterfalls.</p>
+            <p className="package-desc">
+              North or South Goa beaches, Forts, and Waterfalls.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
       <hr className="section-divider" />
 
-      <div id="reviews" className="reviews-section">
+      {/* Cars */}
+      <section id="cars" className="cars-section">
+        <h2 className="section-title">CHOOSE YOUR RIDE</h2>
+        <p className="section-subtitle">
+          Comfortable, Clean, and AC Cabs for every group size.
+        </p>
+
+        <div className="cars-container">
+          {cars.map((car) => (
+            <div key={car.name} className="car-card">
+              <Image
+                src={`/assets/${car.img}.png`}
+                alt={car.name}
+                height={100}
+                width={150}
+              />
+
+              <h3 className="nameColor">{car.name}</h3>
+              <p className="car-price">Starts ₹{car.price} / day</p>
+
+              <button
+                className="btn-outline"
+                onClick={() => handleBooking(car.name)}
+              >
+                Book
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <hr className="section-divider" />
+
+      {/* Reviews */}
+      <section id="reviews" className="reviews-section">
         <h2 className="section-title">TRAVELER STORIES</h2>
+
         <div className="reviews-container">
           <div className="review-card">
-            <p className="review-quote">"The driver was so polite and the car was spotless. Loved the Goan music playlist!"</p>
+            <p className="review-quote">
+              "The driver was so polite and the car was spotless."
+            </p>
             <p className="review-author">- Sarah Jenkins</p>
           </div>
+
           <div className="review-card">
-            <p className="review-quote">"Best rates we found for an airport drop. Efficient and on time."</p>
+            <p className="review-quote">
+              "Best rates we found for an airport drop."
+            </p>
             <p className="review-author">- Rahul Verma</p>
           </div>
+
           <div className="review-card">
-            <p className="review-quote">"We booked an SUV for 3 days. Smooth rides and great recommendations by the driver."</p>
+            <p className="review-quote">
+              "Smooth rides and great recommendations."
+            </p>
             <p className="review-author">- Mike & Team</p>
           </div>
         </div>
-      </div>
+      </section>
 
       <hr className="section-divider" />
 
+      {/* Footer */}
       <footer id="contact" className="footer">
         <h3>Companies Name</h3>
-        <p className="footer-tagline">Making your Goan holidays smoother, one ride at a time.</p>
+        <p className="footer-tagline">
+          Making your Goan holidays smoother, one ride at a time.
+        </p>
 
         <div className="footer-contact-info">
           <p><b>Phone: </b>Phone Number</p>
           <p><b>Email: </b>Email</p>
           <p><b>Address: </b>Address</p>
         </div>
-        {/* 
-        <hr className="footer-divider" /> */}
-        <p className="footer-copyright">&copy; All rights reserved.</p>
+
+        <p className="footer-copyright">
+          &copy; All rights reserved.
+        </p>
       </footer>
     </>
   );

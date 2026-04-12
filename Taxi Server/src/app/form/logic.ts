@@ -9,19 +9,25 @@ export function useFormLogic() {
     const carFromUrl = searchParams.get('car') || 'Hatchback';
 
     const [carType, setCarType] = useState(carFromUrl);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [selectedDates, setSelectedDates] = useState<string[]>([]);
-    const [tempSelectedDates, setTempSelectedDates] = useState<string[]>([]);
-    const [currentMonth, setCurrentMonth] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1)); // Default to current month
-    const [availabilityStatus, setAvailabilityStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
+    const [routeType, setRouteType] = useState('Airport');
     const [showErrors, setShowErrors] = useState(false);
+
+    // Calendar State
+    const [showCalendar, setShowCalendar] = useState(false);
+    const [currentMonth, setCurrentMonth] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
 
     // Form inputs state
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
+        email: '',
         pickup: '',
-        drop: ''
+        drop: '',
+        date: '',
+        timeHour: '12',
+        timeMinute: '00',
+        timePeriod: 'AM',
+        specialRequests: ''
     });
 
     useEffect(() => {
@@ -32,87 +38,81 @@ export function useFormLogic() {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
-    const handleGoNow = () => {
-        setShowErrors(true); // Highlight missing fields when checking availability
-
-        if (!formData.name.trim() || !formData.phone.trim() || !formData.pickup.trim() || !formData.drop.trim()) {
-            setAvailabilityStatus('idle'); // Don't show availability if form is incomplete
-            return;
-        }
-
-        setAvailabilityStatus('checking');
-        // Reset selected dates if user switches to Go Now
-        setSelectedDates([]);
-
-        // Simulate API check
-        setTimeout(() => {
-            const isAvailable = Math.random() > 0.3; // 70% chance available
-            setAvailabilityStatus(isAvailable ? 'available' : 'unavailable');
-        }, 2000);
-    };
-
-    const handleGoLater = () => {
-        setAvailabilityStatus('idle');
-        setTempSelectedDates([...selectedDates]); // Copy current to temp
-        setShowCalendar(true);
-    };
-
-    const handleBooking = () => {
-        // Save form data and selected dates to localStorage for the summary page
-        localStorage.setItem('taxi_booking_data', JSON.stringify({
-            ...formData,
-            selectedDates,
-            carType
+    const handleSwapAddresses = () => {
+        setFormData(prev => ({
+            ...prev,
+            pickup: prev.drop,
+            drop: prev.pickup
         }));
-        router.push('/Drivers');
     };
 
-    const handleCancelCalendar = () => {
-        setShowCalendar(false);
-        setTempSelectedDates([]);
-    };
-
-    const handleDoneCalendar = () => {
-        setSelectedDates([...tempSelectedDates]);
-        setShowCalendar(false);
-        setShowErrors(true); // Highlight missing fields when dates are confirmed
-    };
-
-    const toggleDate = (date: string) => {
-        setTempSelectedDates(prev =>
-            prev.includes(date)
-                ? prev.filter(d => d !== date)
-                : [...prev, date].sort()
-        );
+    // Calendar Handlers
+    const openCalendar = () => setShowCalendar(true);
+    const closeCalendar = () => setShowCalendar(false);
+    
+    const handleSelectDate = (dateStr: string) => {
+        setFormData(prev => ({ ...prev, date: dateStr }));
+        closeCalendar();
     };
 
     const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
     const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
 
-    const isFormValid = formData.name.trim() !== '' &&
-        formData.phone.trim() !== '' &&
-        formData.pickup.trim() !== '' &&
-        formData.drop.trim() !== '' &&
-        (availabilityStatus === 'available' || selectedDates.length > 0);
+    // Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    const errors = {
+        name: formData.name.trim().length < 2,
+        phone: !phoneRegex.test(formData.phone),
+        email: !emailRegex.test(formData.email),
+        pickup: formData.pickup.trim() === '',
+        drop: formData.drop.trim() === '',
+        date: formData.date === ''
+    };
+
+    // The form is valid if no errors in text fields and date is chosen
+    const isFormValid = !errors.name && !errors.phone && !errors.email && !errors.pickup && !errors.drop && !errors.date;
+
+    const handleBooking = () => {
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            window.dispatchEvent(new CustomEvent('startConnectionCheck', { detail: { duration: 3000 } }));
+            return;
+        }
+
+        setShowErrors(true);
+
+        if (isFormValid) {
+            // Combine the time parts into one string for storage
+            const finalTime = `${formData.timeHour}:${formData.timeMinute} ${formData.timePeriod}`;
+            
+            localStorage.setItem('taxi_booking_data', JSON.stringify({
+                ...formData,
+                time: finalTime,
+                carType,
+                routeType
+            }));
+            router.push('/Drivers');
+        }
+    };
 
     return {
         carType,
-        showCalendar,
-        selectedDates,
-        tempSelectedDates,
-        currentMonth,
-        availabilityStatus,
+        routeType,
+        setRouteType,
         formData,
         isFormValid,
         showErrors,
+        errors,
+        showCalendar,
+        currentMonth,
         handleInputChange,
-        handleGoNow,
-        handleGoLater,
-        handleBooking,
-        handleCancelCalendar,
-        handleDoneCalendar,
-        toggleDate,
+        handleSwapAddresses,
+        openCalendar,
+        closeCalendar,
+        handleSelectDate,
         nextMonth,
-        prevMonth
+        prevMonth,
+        handleBooking
     };
 }

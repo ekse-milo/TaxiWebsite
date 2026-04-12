@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import OfflineBanner from "./connection/OfflineBanner";
+import SessionManager from "./utilities/SessionManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +29,22 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+        {/* Session & Connection Management */}
+        <SessionManager />
+        <OfflineBanner />
+
+        {/* Instant Offline Check - Prevents landing page flicker */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+          if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            document.body.classList.add('is-offline-initial');
+          }
+        ` }} />
+
+        <div className="main-app-content">
+          {children}
+        </div>
       </body>
     </html>
   );
