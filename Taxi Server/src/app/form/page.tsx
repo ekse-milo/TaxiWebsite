@@ -1,6 +1,5 @@
 'use client';
 
-<<<<<<< HEAD
 import { Suspense } from 'react';
 import { useFormLogic } from './logic';
 import './form.css';
@@ -8,116 +7,61 @@ import './form.css';
 function FormContent() {
     const {
         carType,
-        showCalendar,
-        selectedDates,
-        tempSelectedDates,
-        currentMonth,
-        availabilityStatus,
+        routeType,
+        setRouteType,
         formData,
         isFormValid,
         showErrors,
+        errors,
+        showCalendar,
+        currentMonth,
         handleInputChange,
-        handleGoNow,
-        handleGoLater,
-        handleBooking,
-        handleCancelCalendar,
-        handleDoneCalendar,
-        toggleDate,
+        handleSwapAddresses,
+        openCalendar,
+        closeCalendar,
+        handleSelectDate,
         nextMonth,
-        prevMonth
+        prevMonth,
+        handleBooking
     } = useFormLogic();
-=======
-import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import './form.css';
 
-function FormContent() {
-    const searchParams = useSearchParams();
-    const carFromUrl = searchParams.get('car') || 'Hatchback';
+    const routes = ['Airport', 'Sightseeing', 'City Tour'];
 
-    const [carType, setCarType] = useState(carFromUrl);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [selectedDates, setSelectedDates] = useState<string[]>([]);
-    const [currentMonth, setCurrentMonth] = useState(new Date(2026, 1)); // Feb 2026
-    const [availabilityStatus, setAvailabilityStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
-
-    const handleGoNow = () => {
-        setAvailabilityStatus('checking');
-        // Reset selected dates if user switches to Go Now
-        setSelectedDates([]);
-
-        // Simulate API check
-        setTimeout(() => {
-            const isAvailable = Math.random() > 0.3; // 70% chance available
-            setAvailabilityStatus(isAvailable ? 'available' : 'unavailable');
-        }, 2000);
-    };
-
-    useEffect(() => {
-        if (carFromUrl) setCarType(carFromUrl);
-    }, [carFromUrl]);
-
-    const handleGoLater = () => {
-        setAvailabilityStatus('idle');
-        setShowCalendar(true);
-    };
-
-    const handleBooking = () => {
-        alert('Booking Confirmed! Thank you for choosing our service.');
-    };
-
-    const closeCalendar = () => {
-        setShowCalendar(false);
-    };
-
-    const toggleDate = (date: string) => {
-        setAvailabilityStatus('idle'); // clear simple availability if picking dates
-        setSelectedDates(prev =>
-            prev.includes(date)
-                ? prev.filter(d => d !== date)
-                : [...prev, date].sort()
-        );
-    };
-
->>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
-
-    // Calendar logic
-    const daysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
+    // Dropdown value arrays
+    const hours = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    const minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
+    const periods = ['AM', 'PM'];
 
     const generateCalendarDays = () => {
         const year = currentMonth.getFullYear();
         const month = currentMonth.getMonth();
-        const days = [];
-        const numDays = daysInMonth(year, month);
-        const firstDay = firstDayOfMonth(year, month);
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        // Padding for previous month days
+        const days = [];
         for (let i = 0; i < firstDay; i++) {
             days.push(<div key={`empty-${i}`} className="calendar-day disabled"></div>);
         }
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        for (let day = 1; day <= numDays; day++) {
-            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        for (let day = 1; day <= daysInMonth; day++) {
             const dateObj = new Date(year, month, day);
-            const isDisabled = dateObj < today;
-<<<<<<< HEAD
-            const isSelected = tempSelectedDates.includes(dateStr);
-=======
-            const isSelected = selectedDates.includes(dateStr);
->>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
-            const isToday = dateObj.getFullYear() === today.getFullYear() &&
-                dateObj.getMonth() === today.getMonth() &&
-                dateObj.getDate() === today.getDate();
+            // Fix: Build the string manually instead of using toISOString() which converts to UTC
+            const localMonth = String(month + 1).padStart(2, '0');
+            const localDay = String(day).padStart(2, '0');
+            const dateStr = `${year}-${localMonth}-${localDay}`;
+            
+            const isPast = dateObj < today;
+            const isToday = dateObj.getTime() === today.getTime();
+            const isSelected = formData.date === dateStr;
 
             days.push(
-                <div
-                    key={day}
-                    className={`calendar-day ${isSelected ? 'occupied selected' : ''} ${isDisabled ? 'disabled' : ''} ${isToday ? 'today' : ''}`}
-                    onClick={() => !isDisabled && toggleDate(dateStr)}
+                <div 
+                    key={day} 
+                    className={`calendar-day ${isPast ? 'disabled' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+                    onClick={() => !isPast && handleSelectDate(dateStr)}
                 >
                     {day}
                 </div>
@@ -126,7 +70,10 @@ function FormContent() {
         return days;
     };
 
-<<<<<<< HEAD
+    const displayDate = formData.date 
+        ? new Date(formData.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        : 'Select Date';
+
     return (
         <>
             <header className="form-header">
@@ -135,43 +82,71 @@ function FormContent() {
 
             <section className="booking-section">
                 <div className="search-box">
-                    <div className="car-selection-display" style={{ textAlign: 'center', marginBottom: '30px' }}>
+                    <div className="car-selection-display" style={{ textAlign: 'center', marginBottom: '10px' }}>
                         <h2 style={{ color: '#005577', margin: '0 0 5px 0' }}>Booking {carType}</h2>
-                        <p style={{ color: '#666', fontSize: '0.9rem' }}>Please fill in your details below</p>
+                        <p style={{ color: '#666', fontSize: '0.9rem' }}>Please select your journey type and fill in your details</p>
+                    </div>
+
+                    <div className="route-selection-container">
+                        {routes.map(route => (
+                            <div 
+                                key={route} 
+                                className={`route-option ${routeType === route ? 'selected' : ''}`}
+                                onClick={() => setRouteType(route)}
+                            >
+                                <div className="circle-check"></div>
+                                <span>{route}</span>
+                            </div>
+                        ))}
                     </div>
 
                     <div className="user-column">
-                        <div>
-                            <label className={`input-box ${showErrors && !formData.name.trim() ? 'has-error' : ''}`}>
-                                <span className="material-icons">person</span>
+                        <div className="input-group">
+                            <label className={`input-box ${showErrors && errors.name ? 'has-error' : ''}`}>
+                                <span className="material-icons" style={{ color: '#005577' }}>person</span>
                                 <input
                                     type="text"
-                                    placeholder="Name"
+                                    placeholder="Full Name"
                                     value={formData.name}
                                     onChange={(e) => handleInputChange('name', e.target.value)}
                                 />
                             </label>
-                            {showErrors && !formData.name.trim() && <p style={{ color: '#d32f2f', fontSize: '0.75rem', margin: '4px 0 0 15px' }}>* Required</p>}
+                            {showErrors && errors.name && <p className="error-msg">Enter a valid name</p>}
                         </div>
 
-                        <div>
-                            <label className={`input-box ${showErrors && !formData.phone.trim() ? 'has-error' : ''}`}>
-                                <span className="material-icons">phone</span>
-                                <input
-                                    type="tel"
-                                    placeholder="Contact Number"
-                                    value={formData.phone}
-                                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                                />
-                            </label>
-                            {showErrors && !formData.phone.trim() && <p style={{ color: '#d32f2f', fontSize: '0.75rem', margin: '4px 0 0 15px' }}>* Required</p>}
+                        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                            <div className="input-group" style={{ flex: 1, minWidth: '250px' }}>
+                                <label className={`input-box ${showErrors && errors.phone ? 'has-error' : ''}`}>
+                                    <span className="material-icons" style={{ color: '#005577' }}>phone</span>
+                                    <input
+                                        type="tel"
+                                        placeholder="10-Digit phone Number"
+                                        value={formData.phone}
+                                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                                    />
+                                </label>
+                                {showErrors && errors.phone && <p className="error-msg">Enter valid 10-digit number</p>}
+                            </div>
+
+                            <div className="input-group" style={{ flex: 1, minWidth: '250px' }}>
+                                <label className={`input-box ${showErrors && errors.email ? 'has-error' : ''}`}>
+                                    <span className="material-icons" style={{ color: '#005577' }}>email</span>
+                                    <input
+                                        type="email"
+                                        placeholder="Email Address"
+                                        value={formData.email}
+                                        onChange={(e) => handleInputChange('email', e.target.value)}
+                                    />
+                                </label>
+                                {showErrors && errors.email && <p className="error-msg">Enter a valid email address</p>}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="address-row">
-                        <div style={{ flex: 1 }}>
-                            <label className={`input-box ${showErrors && !formData.pickup.trim() ? 'has-error' : ''}`}>
-                                <span className="material-icons">place</span>
+                    <div className="address-row" style={{ marginTop: '5px' }}>
+                        <div className="input-group" style={{ flex: 1 }}>
+                            <label className={`input-box ${showErrors && errors.pickup ? 'has-error' : ''}`}>
+                                <span className="material-icons" style={{ color: '#005577' }}>place</span>
                                 <input
                                     type="text"
                                     placeholder="Pickup Address"
@@ -180,16 +155,16 @@ function FormContent() {
                                 />
                                 <span className="material-icons search-icon">search</span>
                             </label>
-                            {showErrors && !formData.pickup.trim() && <p style={{ color: '#d32f2f', fontSize: '0.75rem', margin: '4px 0 0 15px' }}>* Required</p>}
+                            {showErrors && errors.pickup && <p className="error-msg">Pickup address is required</p>}
                         </div>
 
-                        <div className="swap-icon">
+                        <div className="swap-icon" onClick={handleSwapAddresses}>
                             <span className="material-icons">swap_horiz</span>
                         </div>
 
-                        <div style={{ flex: 1 }}>
-                            <label className={`input-box ${showErrors && !formData.drop.trim() ? 'has-error' : ''}`}>
-                                <span className="material-icons">place</span>
+                        <div className="input-group" style={{ flex: 1 }}>
+                            <label className={`input-box ${showErrors && errors.drop ? 'has-error' : ''}`}>
+                                <span className="material-icons" style={{ color: '#005577' }}>place</span>
                                 <input
                                     type="text"
                                     placeholder="Drop Address"
@@ -198,207 +173,89 @@ function FormContent() {
                                 />
                                 <span className="material-icons search-icon">search</span>
                             </label>
-                            {showErrors && !formData.drop.trim() && <p style={{ color: '#d32f2f', fontSize: '0.75rem', margin: '4px 0 0 15px' }}>* Required</p>}
+                            {showErrors && errors.drop && <p className="error-msg">Drop address is required</p>}
                         </div>
                     </div>
 
-                    {selectedDates.length > 0 && (
-                        <div style={{ marginTop: '25px', color: '#005577', fontWeight: '700', textAlign: 'center', background: '#e3f2fd', padding: '15px', borderRadius: '12px' }}>
-                            <div style={{ marginBottom: '5px' }}>Selected Dates:</div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
-                                {selectedDates.map(date => (
-                                    <span key={date} style={{ background: '#005577', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.85rem' }}>
-                                        {new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div className="action-buttons">
-                    <button className="later-btn" onClick={handleGoLater}>
-                        <span className="material-icons">event</span>
-                        Go Later
-                    </button>
-
-                    <button className="now-btn" onClick={handleGoNow} disabled={availabilityStatus === 'checking'}>
-                        {availabilityStatus === 'checking' ? 'Checking...' : 'Go Now'}
-                        <span className="material-icons">chevron_right</span>
-                    </button>
-                </div>
-
-                {availabilityStatus !== 'idle' && (
-                    <div className="availability-status">
-                        {availabilityStatus === 'checking' && (
-                            <p className="status-text checking">Checking car availability, please wait...</p>
-                        )}
-                        {availabilityStatus === 'available' && (
-                            <div className="status-result success">
-                                <span className="material-icons">check_circle</span>
-                                <p>Great! Car is available.</p>
-                            </div>
-                        )}
-                        {availabilityStatus === 'unavailable' && (
-                            <div className="status-result error">
-                                <span className="material-icons">cancel</span>
-                                <p>Sorry, no cars are available at this moment. Please try "Go Later".</p>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {!isFormValid && (availabilityStatus === 'available' || selectedDates.length > 0) && (
-                    <p style={{ color: '#d32f2f', fontSize: '0.85rem', fontWeight: '600', marginTop: '10px', textAlign: 'center' }}>
-                        * Please fill all details to enable Submit
-                    </p>
-                )}
-
-                <button
-                    className={`submit-btn ${isFormValid ? 'active' : ''}`}
-                    disabled={!isFormValid}
-                    onClick={handleBooking}
-                >
-                    Submit
-                </button>
-
-                {showCalendar && (
-                    <div className="calendar-overlay" onClick={handleCancelCalendar}>
-                        <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
-                            <div className="calendar-header">
-                                <button className="calendar-nav-btn" onClick={prevMonth}>
-                                    <span className="material-icons">chevron_left</span>
-                                </button>
-                                <h3>{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
-                                <button className="calendar-nav-btn" onClick={nextMonth}>
-                                    <span className="material-icons">chevron_right</span>
-                                </button>
-                            </div>
-
-                            <div className="calendar-grid">
-                                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                                    <div key={day} className="weekday">{day}</div>
-                                ))}
-                                {generateCalendarDays()}
-                            </div>
-
-                            <div className="calendar-footer">
-                                <button className="calendar-cancel-btn" onClick={handleCancelCalendar}>Cancel</button>
-                                <button className="calendar-confirm-btn" onClick={handleDoneCalendar}>Done</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </section>
-        </>
-    );
-}
-
-export default function FormPage() {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <FormContent />
-        </Suspense>
-=======
-    const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-    const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
-
-    return (
-        <section className="booking-section">
-            <div className="search-box">
-
-                <div className="car-selection-display" style={{ textAlign: 'center', marginBottom: '30px' }}>
-                    <h2 style={{ color: '#005577', margin: '0 0 5px 0' }}>Booking {carType}</h2>
-                    <p style={{ color: '#666', fontSize: '0.9rem' }}>Please fill in your details below</p>
-                </div>
-
-                <div className="user-column">
-                    <label className="input-box">
-                        <span className="material-icons">person</span>
-                        <input type="text" placeholder="Name" />
-                    </label>
-
-                    <label className="input-box">
-                        <span className="material-icons">phone</span>
-                        <input type="tel" placeholder="Contact Number" />
-                    </label>
-                </div>
-
-                <div className="address-row">
-                    <label className="input-box">
-                        <span className="material-icons">place</span>
-                        <input type="text" placeholder="Pickup Address" />
-                        <span className="material-icons search-icon">search</span>
-                    </label>
-
-                    <div className="swap-icon">
-                        <span className="material-icons">swap_horiz</span>
-                    </div>
-
-                    <label className="input-box">
-                        <span className="material-icons">place</span>
-                        <input type="text" placeholder="Drop Address" />
-                        <span className="material-icons search-icon">search</span>
-                    </label>
-                </div>
-
-                {selectedDates.length > 0 && (
-                    <div style={{ marginTop: '25px', color: '#005577', fontWeight: '700', textAlign: 'center', background: '#e3f2fd', padding: '15px', borderRadius: '12px' }}>
-                        <div style={{ marginBottom: '5px' }}>Selected Dates:</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
-                            {selectedDates.map(date => (
-                                <span key={date} style={{ background: '#005577', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.85rem' }}>
-                                    {new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                    <div className="date-time-row">
+                        <div className="input-group" style={{ flex: 1 }}>
+                            <div 
+                                className={`input-box ${showErrors && errors.date ? 'has-error' : ''}`} 
+                                onClick={openCalendar}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <span className="material-icons" style={{ color: '#005577' }}>calendar_today</span>
+                                <span style={{ flex: 1, padding: '8px 10px', color: formData.date ? '#333' : '#999' }}>
+                                    {displayDate}
                                 </span>
-                            ))}
+                            </div>
+                            {showErrors && errors.date && <p className="error-msg">Select a date</p>}
+                        </div>
+
+                        <div className="input-group" style={{ flex: 1 }}>
+                            <div className="input-box">
+                                <span className="material-icons" style={{ color: '#005577' }}>schedule</span>
+                                <div className="time-selectors">
+                                    <select 
+                                        className="time-select"
+                                        value={formData.timeHour}
+                                        onChange={(e) => handleInputChange('timeHour', e.target.value)}
+                                    >
+                                        {hours.map(h => <option key={h} value={h}>{h}</option>)}
+                                    </select>
+                                    <span className="time-divider">:</span>
+                                    <select 
+                                        className="time-select"
+                                        value={formData.timeMinute}
+                                        onChange={(e) => handleInputChange('timeMinute', e.target.value)}
+                                    >
+                                        {minutes.map(m => <option key={m} value={m}>{m}</option>)}
+                                    </select>
+                                    <select 
+                                        className="time-select"
+                                        value={formData.timePeriod}
+                                        onChange={(e) => handleInputChange('timePeriod', e.target.value)}
+                                        style={{ marginLeft: '5px', color: '#005577', fontWeight: 'bold' }}
+                                    >
+                                        {periods.map(p => <option key={p} value={p}>{p}</option>)}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                )}
-            </div>
 
-            <div className="action-buttons">
-                <button className="later-btn" onClick={handleGoLater}>
-                    <span className="material-icons">event</span>
-                    Go Later
-                </button>
+                    <div className="input-group" style={{ marginTop: '10px' }}>
+                        <label className="input-box" style={{ alignItems: 'flex-start', borderRadius: '18px' }}>
+                            <span className="material-icons" style={{ color: '#005577', marginTop: '10px' }}>notes</span>
+                            <textarea
+                                placeholder="Special Requests (Example: I have 3 large bags, traveling with a pet, or need a child seat)"
+                                value={formData.specialRequests}
+                                onChange={(e) => handleInputChange('specialRequests', e.target.value)}
+                            />
+                        </label>
+                    </div>
+                </div>
 
-                <button className="now-btn" onClick={handleGoNow} disabled={availabilityStatus === 'checking'}>
-                    {availabilityStatus === 'checking' ? 'Checking...' : 'Go Now'}
-                    <span className="material-icons">chevron_right</span>
-                </button>
-            </div>
-
-            {availabilityStatus !== 'idle' && (
-                <div className="availability-status">
-                    {availabilityStatus === 'checking' && (
-                        <p className="status-text checking">Checking car availability, please wait...</p>
-                    )}
-                    {availabilityStatus === 'available' && (
-                        <div className="status-result success">
-                            <span className="material-icons">check_circle</span>
-                            <p>Great! Car is available.</p>
-                        </div>
-                    )}
-                    {availabilityStatus === 'unavailable' && (
-                        <div className="status-result error">
-                            <span className="material-icons">cancel</span>
-                            <p>Sorry, no cars are available at this moment. Please try "Go Later".</p>
-                        </div>
+                <div className="submit-container" style={{ marginTop: '30px', textAlign: 'center', width: '100%' }}>
+                    <button
+                        className={`submit-btn ${isFormValid ? 'active' : ''}`}
+                        disabled={!isFormValid && showErrors}
+                        onClick={handleBooking}
+                        style={{ width: '100%', maxWidth: '400px' }}
+                    >
+                        Confirm Booking Request
+                    </button>
+                    {!isFormValid && showErrors && (
+                        <p style={{ color: '#d32f2f', fontSize: '0.9rem', fontWeight: '600', marginTop: '15px' }}>
+                            Please fix the errors in red to continue
+                        </p>
                     )}
                 </div>
-            )}
-
-            <button
-                className={`submit-btn ${(availabilityStatus === 'available' || selectedDates.length > 0) ? 'active' : ''}`}
-                disabled={!(availabilityStatus === 'available' || selectedDates.length > 0)}
-                onClick={handleBooking}
-            >
-                Submit
-            </button>
+            </section>
 
             {showCalendar && (
                 <div className="calendar-overlay" onClick={closeCalendar}>
-                    <div className="calendar-modal" onClick={(e) => e.stopPropagation()}>
+                    <div className="calendar-modal" onClick={e => e.stopPropagation()}>
                         <div className="calendar-header">
                             <button className="calendar-nav-btn" onClick={prevMonth}>
                                 <span className="material-icons">chevron_left</span>
@@ -408,22 +265,16 @@ export default function FormPage() {
                                 <span className="material-icons">chevron_right</span>
                             </button>
                         </div>
-
                         <div className="calendar-grid">
-                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
                                 <div key={day} className="weekday">{day}</div>
                             ))}
                             {generateCalendarDays()}
                         </div>
-
-                        <div className="calendar-footer">
-                            <button className="calendar-confirm-btn" onClick={closeCalendar}>Done</button>
-                        </div>
                     </div>
                 </div>
             )}
-        </section>
->>>>>>> e4cbdbc5014b4db09b5c15cae94aee5fb9b5684b
+        </>
     );
 }
 
