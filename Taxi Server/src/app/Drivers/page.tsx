@@ -17,7 +17,7 @@ export default function DriversPage() {
     return (
         <section className="drivers-body">
             <header className="drivers-header">
-                <h1>Our Drivers</h1>
+                <h1>Our Professional Drivers</h1>
             </header>
 
             <div className="drivers-container">
@@ -26,49 +26,39 @@ export default function DriversPage() {
                         <div key={driver.id} className="driver-card" onClick={() => handleSelectDriver(driver)}>
                             <div className="driver-card-top"></div>
                             <div className="driver-avatar">
-                                <span className="material-icons">local_taxi</span>
+                                <span className="material-icons" style={{ fontSize: '40px' }}>account_circle</span>
                             </div>
-                            <h3 className="driver-name">{driver.name || 'Professional Driver'}</h3>
+                            <h3 className="driver-name">{driver.name}</h3>
+                            <div className="driver-rating">
+                                <span className="material-icons" style={{ color: '#FFD700', fontSize: '18px' }}>star</span>
+                                <span>{driver.rating}</span>
+                                <span style={{ marginLeft: '10px', color: '#666', fontSize: '0.8rem' }}>({driver.experience} Exp)</span>
+                            </div>
+                            
                             <div className={`status-badge ${driver.is_available ? 'status-available' : 'status-unavailable'}`}>
                                 <div className="status-dot"></div>
                                 {driver.is_available ? 'Available Now' : 'On Trip'}
                             </div>
+
                             <div className="driver-details">
                                 <div className="detail-row">
-                                    <div className="detail-icon">
-                                        <span className="material-icons">phone</span>
-                                    </div>
+                                    <div className="detail-icon"><span className="material-icons">local_taxi</span></div>
                                     <div className="detail-text">
-                                        <span className="detail-label">Phone Number</span>
-                                        <span className="detail-value">{driver.phone_number || '+91 XXXX XXXX'}</span>
+                                        <span className="detail-label">Taxi Service</span>
+                                        <span className="detail-value">Licensed Professional</span>
                                     </div>
                                 </div>
                                 <div className="detail-row">
-                                    <div className="detail-icon">
-                                        <span className="material-icons">email</span>
-                                    </div>
+                                    <div className="detail-icon"><span className="material-icons">verified</span></div>
                                     <div className="detail-text">
-                                        <span className="detail-label">Email</span>
-                                        <span className="detail-value">{driver.email || 'driver@taxigoa.com'}</span>
-                                    </div>
-                                </div>
-                                <div className="detail-row">
-                                    <div className="detail-icon">
-                                        <span className="material-icons">badge</span>
-                                    </div>
-                                    <div className="detail-text">
-                                        <span className="detail-label">License Number</span>
-                                        <span className="detail-value">{driver.license_number || 'GOA-TX-XXXX'}</span>
+                                        <span className="detail-label">Verify ID</span>
+                                        <span className="detail-value">{driver.license_number}</span>
                                     </div>
                                 </div>
                             </div>
-                            {driver.created_at && (
-                                <div className="driver-footer">
-                                    Joined {formatDate(driver.created_at)}
-                                </div>
-                            )}
+                            
                             <button className="select-driver-btn">
-                                Select Driver
+                                Select {driver.name.split(' ')[0]}
                                 <span className="material-icons">chevron_right</span>
                             </button>
                         </div>
@@ -80,58 +70,60 @@ export default function DriversPage() {
                 <div className="modal-overlay" onClick={handleCancelConfirmation}>
                     <div className="summary-modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
+                            <span className="material-icons" style={{ color: '#005577', fontSize: '48px' }}>whatsapp</span>
                             <h2>Confirm Booking</h2>
-                            <p className="modal-subtitle">Review your ride details with {selectedDriver.name}</p>
+                            <p className="modal-subtitle">We will redirect you to WhatsApp to finalize with our team.</p>
                         </div>
 
                         <div className="modal-content">
                             <div className="summary-section">
-                                <h4>Your Details</h4>
+                                <h4>Trip Overview</h4>
                                 <div className="summary-grid">
                                     <div className="summary-item">
-                                        <span className="summar-label">Name</span>
-                                        <span className="summary-value">{bookingData?.name || '-'}</span>
+                                        <span className="summar-label">Route</span>
+                                        <span className="summary-value" style={{ color: '#005577', fontWeight: 'bold' }}>{bookingData?.routeType}</span>
                                     </div>
                                     <div className="summary-item">
-                                        <span className="summar-label">Phone</span>
-                                        <span className="summary-value">{bookingData?.phone || '-'}</span>
+                                        <span className="summar-label">Car</span>
+                                        <span className="summary-value">{bookingData?.carType}</span>
+                                    </div>
+                                    <div className="summary-item">
+                                        <span className="summar-label">Date</span>
+                                        <span className="summary-value">{bookingData?.date ? formatDate(bookingData.date) : '-'}</span>
+                                    </div>
+                                    <div className="summary-item">
+                                        <span className="summar-label">Time</span>
+                                        <span className="summary-value">{bookingData?.timeHour}:{bookingData?.timeMinute} {bookingData?.timePeriod}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="summary-section">
-                                <h4>Ride Details</h4>
-                                <div className="summary-item" style={{ marginBottom: '15px' }}>
-                                    <span className="summar-label">Car Type</span>
-                                    <span className="summary-value" style={{ color: '#005577', fontWeight: '700' }}>{bookingData?.carType}</span>
-                                </div>
+                                <h4>Addresses</h4>
                                 <div className="summary-item" style={{ marginBottom: '10px' }}>
-                                    <span className="summar-label">Pickup Address</span>
+                                    <span className="summar-label">Pickup</span>
                                     <span className="summary-value">{bookingData?.pickup}</span>
                                 </div>
                                 <div className="summary-item">
-                                    <span className="summar-label">Drop Address</span>
+                                    <span className="summar-label">Drop</span>
                                     <span className="summary-value">{bookingData?.drop}</span>
                                 </div>
                             </div>
 
-                            {bookingData?.selectedDates?.length > 0 && (
+                            {bookingData?.specialRequests && (
                                 <div className="summary-section">
-                                    <h4>Booking Dates</h4>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                        {bookingData.selectedDates.map((date: string) => (
-                                            <span key={date} style={{ background: '#005577', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>
-                                                {formatDate(date)}
-                                            </span>
-                                        ))}
-                                    </div>
+                                    <h4>Special Requests</h4>
+                                    <p style={{ fontSize: '0.9rem', color: '#333', fontStyle: 'italic' }}>"{bookingData.specialRequests}"</p>
                                 </div>
                             )}
                         </div>
 
                         <div className="modal-actions">
-                            <button className="modal-cancel-btn" onClick={handleCancelConfirmation}>Cancel</button>
-                            <button className="modal-submit-btn" onClick={handleConfirmBooking}>Confirm Booking</button>
+                            <button className="modal-cancel-btn" onClick={handleCancelConfirmation}>Back</button>
+                            <button className="modal-submit-btn" onClick={handleConfirmBooking} style={{ background: '#25D366' }}>
+                                <span className="material-icons" style={{ fontSize: '18px' }}>send</span>
+                                Send Request via WhatsApp
+                            </button>
                         </div>
                     </div>
                 </div>
