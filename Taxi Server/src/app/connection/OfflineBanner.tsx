@@ -53,7 +53,7 @@ export default function OfflineBanner() {
     setIsChecking(true);
     setCheckMessage("Reconnecting...");
 
-    // Recovery Check Stage: 5 Seconds as requested
+    // Recovery Check Stage: 5 Seconds
     setTimeout(() => {
       if (typeof navigator !== 'undefined' && navigator.onLine) {
         window.location.reload();

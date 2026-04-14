@@ -16,11 +16,6 @@ export interface Driver {
 }
 
 
-
-// ==========================================
-// PURE UTILITY FUNCTIONS (Reusable anywhere)
-// ==========================================
-
 export const formatDate = (dateString: string): string => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -61,7 +56,7 @@ export function generateWhatsAppLink(ownerPhone: string, bookingData: any, selec
 }
 
 // ==========================================
-// API SERVICE FUNCTIONS (Reusable Database Logic)
+// API SERVICE FUNCTIONS 
 // ==========================================
 
 export async function upsertCustomerRecord(phone: string, name: string, email: string) {
@@ -106,7 +101,7 @@ export async function fetchDriversRecords() {
 
 
 // ==========================================
-// REACT COMPONENT LOGIC (Hook)
+// REACT COMPONENT LOGIC 
 // ==========================================
 
 export function useDriversLogic() {

@@ -17,6 +17,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Goa Taxi Service | Explore Goa in Comfort",
   description: "Premium Car Booking Service in Goa. Hatchbacks, Sedans, SUVs, and MUVs for Airport transfers, City tours, and Sightseeing.",
+  keywords: ["Goa Taxi", "Cab Booking Goa", "Airport Transfer Goa", "Goa Sightseeing Cabs", "Premium Taxi Goa", "Hire Car Goa"],
+  openGraph: {
+    title: "Premium Goa Taxi Service",
+    description: "Book comfortable, clean, and AC cabs for your Goa trip. Airport drops, sightseeing, and custom packages available.",
+    url: "https://your-domain-here.com",
+    siteName: "Goa Taxi Booking",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Premium Goa Taxi Service",
+    description: "Book reliable taxis in Goa for sightseeing and airport transfers.",
+  },
 };
 
 export default function RootLayout({

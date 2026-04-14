@@ -452,6 +452,69 @@
     }
 }
 
+/* User Summary Bar (Drivers Page) */
+.user-summary-bar {
+    margin: 15px auto 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 0.95rem;
+    backdrop-filter: blur(5px);
+    width: fit-content;
+    max-width: 90%;
+}
+
+.user-summary-bar p {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.edit-info-link {
+    background: #fdee00;
+    color: #005577;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.edit-info-link:hover {
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+.edit-info-link .material-icons {
+    font-size: 16px;
+}
+
+@media (max-width: 600px) {
+    .user-summary-bar {
+        flex-direction: column;
+        gap: 8px;
+        border-radius: 15px;
+        padding: 12px;
+    }
+
+    .user-summary-bar p {
+        font-size: 0.85rem;
+        white-space: normal;
+        text-align: center;
+    }
+}
+
 /* Loading State Animations */
 .loading-state {
     display: flex;
