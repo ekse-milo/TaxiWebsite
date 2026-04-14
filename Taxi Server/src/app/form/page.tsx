@@ -37,7 +37,7 @@ function FormContent() {
         const month = currentMonth.getMonth();
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -52,14 +52,14 @@ function FormContent() {
             const localMonth = String(month + 1).padStart(2, '0');
             const localDay = String(day).padStart(2, '0');
             const dateStr = `${year}-${localMonth}-${localDay}`;
-            
+
             const isPast = dateObj < today;
             const isToday = dateObj.getTime() === today.getTime();
             const isSelected = formData.date === dateStr;
 
             days.push(
-                <div 
-                    key={day} 
+                <div
+                    key={day}
                     className={`calendar-day ${isPast ? 'disabled' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
                     onClick={() => !isPast && handleSelectDate(dateStr)}
                 >
@@ -70,7 +70,7 @@ function FormContent() {
         return days;
     };
 
-    const displayDate = formData.date 
+    const displayDate = formData.date
         ? new Date(formData.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
         : 'Select Date';
 
@@ -89,8 +89,8 @@ function FormContent() {
 
                     <div className="route-selection-container">
                         {routes.map(route => (
-                            <div 
-                                key={route} 
+                            <div
+                                key={route}
                                 className={`route-option ${routeType === route ? 'selected' : ''}`}
                                 onClick={() => setRouteType(route)}
                             >
@@ -179,8 +179,8 @@ function FormContent() {
 
                     <div className="date-time-row">
                         <div className="input-group" style={{ flex: 1 }}>
-                            <div 
-                                className={`input-box ${showErrors && errors.date ? 'has-error' : ''}`} 
+                            <div
+                                className={`input-box ${showErrors && errors.date ? 'has-error' : ''}`}
                                 onClick={openCalendar}
                                 style={{ cursor: 'pointer' }}
                             >
@@ -196,7 +196,7 @@ function FormContent() {
                             <div className="input-box">
                                 <span className="material-icons" style={{ color: '#005577' }}>schedule</span>
                                 <div className="time-selectors">
-                                    <select 
+                                    <select
                                         className="time-select"
                                         value={formData.timeHour}
                                         onChange={(e) => handleInputChange('timeHour', e.target.value)}
@@ -204,14 +204,14 @@ function FormContent() {
                                         {hours.map(h => <option key={h} value={h}>{h}</option>)}
                                     </select>
                                     <span className="time-divider">:</span>
-                                    <select 
+                                    <select
                                         className="time-select"
                                         value={formData.timeMinute}
                                         onChange={(e) => handleInputChange('timeMinute', e.target.value)}
                                     >
                                         {minutes.map(m => <option key={m} value={m}>{m}</option>)}
                                     </select>
-                                    <select 
+                                    <select
                                         className="time-select"
                                         value={formData.timePeriod}
                                         onChange={(e) => handleInputChange('timePeriod', e.target.value)}

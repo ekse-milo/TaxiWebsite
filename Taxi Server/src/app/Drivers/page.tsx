@@ -6,6 +6,7 @@ import './drivers.css';
 export default function DriversPage() {
     const {
         driversData,
+        isLoading,
         selectedDriver,
         bookingData,
         isSubmitting,
@@ -22,49 +23,69 @@ export default function DriversPage() {
             </header>
 
             <div className="drivers-container">
-                <div className="drivers-grid">
-                    {driversData.map(driver => (
-                        <div key={driver.id} className="driver-card" onClick={() => handleSelectDriver(driver)}>
-                            <div className="driver-card-top"></div>
-                            <div className="driver-avatar">
-                                <span className="material-icons" style={{ fontSize: '40px' }}>account_circle</span>
-                            </div>
-                            <h3 className="driver-name">{driver.name}</h3>
-                            <div className="driver-rating">
-                                <span className="material-icons" style={{ color: '#FFD700', fontSize: '18px' }}>star</span>
-                                <span>{driver.rating}</span>
-                                <span style={{ marginLeft: '10px', color: '#666', fontSize: '0.8rem' }}>({driver.experience} Exp)</span>
-                            </div>
-                            
-                            <div className={`status-badge ${driver.is_available ? 'status-available' : 'status-unavailable'}`}>
-                                <div className="status-dot"></div>
-                                {driver.is_available ? 'Available Now' : 'On Trip'}
-                            </div>
+                {isLoading ? (
+                    <div className="loading-state">
+                        <span className="material-icons rotating">hourglass_empty</span>
+                        <p>Loading Professional Drivers...</p>
+                    </div>
+                ) : (
+                    <div className="drivers-grid">
+                        {driversData.map(driver => (
+                            <div key={driver.id} className="driver-card" onClick={() => handleSelectDriver(driver)}>
+                                <div className="driver-card-top"></div>
+                                <div className="driver-avatar">
+                                    <span className="material-icons" style={{ fontSize: '40px' }}>account_circle</span>
+                                </div>
+                                <h3 className="driver-name">{driver.name}</h3>
+                                <div className="driver-rating">
+                                    {driver.rating && (
+                                        <>
+                                            <span className="material-icons" style={{ color: '#FFD700', fontSize: '18px' }}>star</span>
+                                            <span>{driver.rating}</span>
+                                        </>
+                                    )}
+                                    {driver.experience && (
+                                        <span style={{ marginLeft: '10px', color: '#666', fontSize: '0.8rem' }}>({driver.experience} Exp)</span>
+                                    )}
+                                </div>
+                                
+                                <div className={`status-badge ${driver.is_available ? 'status-available' : 'status-unavailable'}`}>
+                                    <div className="status-dot"></div>
+                                    {driver.is_available ? 'Available Now' : 'On Trip'}
+                                </div>
 
-                            <div className="driver-details">
-                                <div className="detail-row">
-                                    <div className="detail-icon"><span className="material-icons">local_taxi</span></div>
-                                    <div className="detail-text">
-                                        <span className="detail-label">Taxi Service</span>
-                                        <span className="detail-value">Licensed Professional</span>
+                                <div className="driver-details">
+                                    <div className="detail-row">
+                                        <div className="detail-icon"><span className="material-icons">local_taxi</span></div>
+                                        <div className="detail-text">
+                                            <span className="detail-label">Taxi Service</span>
+                                            <span className="detail-value">Licensed Professional</span>
+                                        </div>
+                                    </div>
+                                    <div className="detail-row">
+                                        <div className="detail-icon"><span className="material-icons">verified</span></div>
+                                        <div className="detail-text">
+                                            <span className="detail-label">Verify ID</span>
+                                            <span className="detail-value">{driver.license_number}</span>
+                                        </div>
+                                    </div>
+                                    <div className="detail-row">
+                                        <div className="detail-icon"><span className="material-icons">phone</span></div>
+                                        <div className="detail-text">
+                                            <span className="detail-label">Direct Contact</span>
+                                            <span className="detail-value">{driver.phone_number}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="detail-row">
-                                    <div className="detail-icon"><span className="material-icons">verified</span></div>
-                                    <div className="detail-text">
-                                        <span className="detail-label">Verify ID</span>
-                                        <span className="detail-value">{driver.license_number}</span>
-                                    </div>
-                                </div>
+                                
+                                <button className="select-driver-btn">
+                                    Select {driver.name.split(' ')[0]}
+                                    <span className="material-icons">chevron_right</span>
+                                </button>
                             </div>
-                            
-                            <button className="select-driver-btn">
-                                Select {driver.name.split(' ')[0]}
-                                <span className="material-icons">chevron_right</span>
-                            </button>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {selectedDriver && (

@@ -450,3 +450,25 @@
         flex: none;
     }
 }
+
+/* Loading State Animations */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 0;
+    color: #005577;
+    gap: 15px;
+    width: 100%;
+}
+
+.rotating {
+    animation: rotate 2s linear infinite;
+    font-size: 48px !important;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

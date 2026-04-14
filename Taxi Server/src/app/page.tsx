@@ -3,43 +3,57 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { fetchVehicleCategories } from "./Drivers/logic";
 import './style.css';
+
+// Helper to map DB names to local image files
+const getImagePath = (categoryName: string) => {
+  const map: { [key: string]: string } = {
+    'Hatchback': 'Hatch',
+    'Sedan': 'Sedan',
+    'MUV': 'MUV',
+    'SUV': 'SUV'
+  };
+  return `/assets/${map[categoryName] || 'Sedan'}.png`;
+};
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ingle scroll effect (clean + correct)
+  // Scroll effect
   useEffect(() => {
-    // Force scroll to top on refresh
     window.scrollTo(0, 0);
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    handleScroll(); // run once on load
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Fetch Categories from Supabase
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const data = await fetchVehicleCategories();
+        setCategories(data);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
   // Navigation handler
   const handleBooking = (car: string) => {
-    console.log("Checking connection... Online status:", navigator.onLine);
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
       window.dispatchEvent(new CustomEvent('startConnectionCheck', { detail: { duration: 3000 } }));
       return;
     }
     router.push(`/form?car=${encodeURIComponent(car)}`);
   };
-
-  const cars = [
-    { name: "Hatchback", price: 1200, img: "Hatch" },
-    { name: "Sedan", price: 1500, img: "Sedan" },
-    { name: "MUV", price: 2200, img: "MUV" },
-    { name: "SUV", price: 3000, img: "SUV" },
-  ];
 
   return (
     <>
@@ -118,26 +132,30 @@ export default function Home() {
         </p>
 
         <div className="cars-container">
-          {cars.map((car) => (
-            <div key={car.name} className="car-card">
-              <Image
-                src={`/assets/${car.img}.png`}
-                alt={car.name}
-                height={100}
-                width={150}
-              />
+          {loading ? (
+            <div className="loading-spinner">Loading Fleet...</div>
+          ) : (
+            categories.map((cat) => (
+              <div key={cat.category_name} className="car-card">
+                <Image
+                  src={getImagePath(cat.category_name)}
+                  alt={cat.category_name}
+                  height={100}
+                  width={150}
+                />
 
-              <h3 className="nameColor">{car.name}</h3>
-              <p className="car-price">Starts ₹{car.price} / day</p>
+                <h3 className="nameColor">{cat.category_name}</h3>
+                <p className="car-price">Starts ₹{cat.base_price} / day</p>
 
-              <button
-                className="btn-outline"
-                onClick={() => handleBooking(car.name)}
-              >
-                Book
-              </button>
-            </div>
-          ))}
+                <button
+                  className="btn-outline"
+                  onClick={() => handleBooking(cat.category_name)}
+                >
+                  Book
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </section>
 

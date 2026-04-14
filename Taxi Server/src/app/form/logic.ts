@@ -3,6 +3,57 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
+// ==========================================
+// PURE VALIDATION SERVICES (Reusable anywhere)
+// ==========================================
+
+export const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+export const validatePhone = (phone: string): boolean => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+};
+
+export const checkFormErrors = (formData: any) => {
+    return {
+        name: formData.name.trim().length < 2,
+        phone: !validatePhone(formData.phone),
+        email: !validateEmail(formData.email),
+        pickup: formData.pickup.trim() === '',
+        drop: formData.drop.trim() === '',
+        date: formData.date === ''
+    };
+};
+
+export const isFormFullyValid = (errors: any): boolean => {
+    return !errors.name && !errors.phone && !errors.email && !errors.pickup && !errors.drop && !errors.date;
+};
+
+// ==========================================
+// PURE DATA SERVICES (Reusable Data Handlers)
+// ==========================================
+
+export const saveBookingDataToStorage = (formData: any, carType: string, routeType: string) => {
+    // Combine the time parts into one string for storage
+    const finalTime = `${formData.timeHour}:${formData.timeMinute} ${formData.timePeriod}`;
+
+    const payload = {
+        ...formData,
+        time: finalTime,
+        carType,
+        routeType
+    };
+
+    localStorage.setItem('taxi_booking_data', JSON.stringify(payload));
+};
+
+// ==========================================
+// REACT COMPONENT LOGIC (Hook)
+// ==========================================
+
 export function useFormLogic() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -49,7 +100,7 @@ export function useFormLogic() {
     // Calendar Handlers
     const openCalendar = () => setShowCalendar(true);
     const closeCalendar = () => setShowCalendar(false);
-    
+
     const handleSelectDate = (dateStr: string) => {
         setFormData(prev => ({ ...prev, date: dateStr }));
         closeCalendar();
@@ -58,21 +109,9 @@ export function useFormLogic() {
     const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
     const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
 
-    // Validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10}$/;
-
-    const errors = {
-        name: formData.name.trim().length < 2,
-        phone: !phoneRegex.test(formData.phone),
-        email: !emailRegex.test(formData.email),
-        pickup: formData.pickup.trim() === '',
-        drop: formData.drop.trim() === '',
-        date: formData.date === ''
-    };
-
-    // The form is valid if no errors in text fields and date is chosen
-    const isFormValid = !errors.name && !errors.phone && !errors.email && !errors.pickup && !errors.drop && !errors.date;
+    // Calculate validation state using our Pure Services
+    const errors = checkFormErrors(formData);
+    const isFormValid = isFormFullyValid(errors);
 
     const handleBooking = () => {
         if (typeof navigator !== 'undefined' && !navigator.onLine) {
@@ -83,15 +122,10 @@ export function useFormLogic() {
         setShowErrors(true);
 
         if (isFormValid) {
-            // Combine the time parts into one string for storage
-            const finalTime = `${formData.timeHour}:${formData.timeMinute} ${formData.timePeriod}`;
-            
-            localStorage.setItem('taxi_booking_data', JSON.stringify({
-                ...formData,
-                time: finalTime,
-                carType,
-                routeType
-            }));
+            // Save using our external service function
+            saveBookingDataToStorage(formData, carType, routeType);
+
+            // Navigate to Drivers page
             router.push('/Drivers');
         }
     };
