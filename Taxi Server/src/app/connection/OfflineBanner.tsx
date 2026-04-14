@@ -13,16 +13,16 @@ export default function OfflineBanner() {
       setIsOffline(false);
       setIsChecking(false);
     };
-    
+
     // Custom trigger with duration control
     const handleTrigger = (e: any) => {
       const duration = e.detail?.duration || 0;
-      
+
       if (!navigator.onLine) {
         if (duration > 0) {
           setIsChecking(true);
           setCheckMessage("Verifying internet connection...");
-          
+
           setTimeout(() => {
             setIsChecking(false);
             if (!navigator.onLine) {
@@ -52,7 +52,7 @@ export default function OfflineBanner() {
   const handleTryAgain = () => {
     setIsChecking(true);
     setCheckMessage("Reconnecting...");
-    
+
     // Recovery Check Stage: 5 Seconds as requested
     setTimeout(() => {
       if (typeof navigator !== 'undefined' && navigator.onLine) {
@@ -83,18 +83,18 @@ export default function OfflineBanner() {
       <div className="offline-overlay">
         <div className="offline-content">
           <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="18" r="2" fill="#005577"/>
-            <path d="M5 11C7.8 8.2 11.7 7.5 15 8.7" stroke="#005577" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M19 11C20.1 12.1 20.8 13.5 21 15" stroke="#005577" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M2.5 8C5.5 5 10 4 14 5" stroke="#005577" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M17 17L21 21M21 17L17 21" stroke="#005577" strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="12" cy="18" r="2" fill="#005577" />
+            <path d="M5 11C7.8 8.2 11.7 7.5 15 8.7" stroke="#005577" strokeWidth="2" strokeLinecap="round" />
+            <path d="M19 11C20.1 12.1 20.8 13.5 21 15" stroke="#005577" strokeWidth="2" strokeLinecap="round" />
+            <path d="M2.5 8C5.5 5 10 4 14 5" stroke="#005577" strokeWidth="2" strokeLinecap="round" />
+            <path d="M17 17L21 21M21 17L17 21" stroke="#005577" strokeWidth="2" strokeLinecap="round" />
           </svg>
 
           <h2 className="offline-title">No Internet Connection</h2>
           <p className="offline-text">
             Oops! It looks like you're offline. Please check your connection to continue your taxi booking.
           </p>
-          <button 
+          <button
             onClick={handleTryAgain}
             style={{
               marginTop: '20px',

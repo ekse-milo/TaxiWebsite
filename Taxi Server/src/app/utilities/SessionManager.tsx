@@ -18,11 +18,11 @@ export default function SessionManager() {
         const timeElapsed = now - parseInt(startTime);
 
         if (timeElapsed > SESSION_LIMIT) {
-          // ⚠️ Session Expired
+          // Session Expired
           console.log("Session expired. Resetting...");
           localStorage.removeItem('taxi_booking_data');
           localStorage.removeItem('taxi_session_start');
-          
+
           // Clear any other local data you might have
           // localStorage.clear(); // Use this if you want to wipe everything
 
@@ -31,7 +31,7 @@ export default function SessionManager() {
           }
         }
       } else {
-        // 🆕 New user entry, set the session start time
+        // New user entry, set the session start time
         localStorage.setItem('taxi_session_start', now.toString());
       }
     };
@@ -40,7 +40,7 @@ export default function SessionManager() {
     checkSession();
 
     // Also check every minute while they are on the site
-    const interval = setInterval(checkSession, 60000); 
+    const interval = setInterval(checkSession, 60000);
 
     return () => clearInterval(interval);
   }, [router, pathname]);

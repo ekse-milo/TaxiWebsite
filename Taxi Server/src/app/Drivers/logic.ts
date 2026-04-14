@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '../utilities/supabase/supabase';
 
 export interface Driver {
     id: number;
@@ -61,13 +62,26 @@ export const formatDate = (dateString: string): string => {
     });
 };
 
+// HELPER: Convert "1:30 PM" style time + "2026-04-16" date into a proper timestamp
+function buildTimestamp(dateStr: string, hour: string, minute: string, period: string): string {
+    let h = parseInt(hour);
+    // Convert 12-hour to 24-hour format
+    if (period === 'AM' && h === 12) h = 0;       // 12:00 AM = 00:00
+    if (period === 'PM' && h !== 12) h = h + 12;   // 1:00 PM = 13:00
+    const hh = h.toString().padStart(2, '0');
+    const mm = minute.padStart(2, '0');
+    // Return ISO format with India timezone offset
+    return `${dateStr}T${hh}:${mm}:00+05:30`;
+}
+
 export function useDriversLogic() {
     const router = useRouter();
     const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
     const [bookingData, setBookingData] = useState<any>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // ✅ OWNER'S WHATSAPP NUMBER
-    const OWNER_PHONE = "91XXXXXXXXXX"; 
+    //  OWNER'S WHATSAPP NUMBER
+    const OWNER_PHONE = "91XXXXXXXXXX";
 
     useEffect(() => {
         const savedData = localStorage.getItem('taxi_booking_data');
@@ -88,31 +102,100 @@ export function useDriversLogic() {
         setSelectedDriver(driver);
     };
 
-    const handleConfirmBooking = () => {
-        if (!bookingData) return;
+    const handleConfirmBooking = async () => {
+        if (!bookingData || isSubmitting) return;
+        setIsSubmitting(true);
 
-        // ✅ 1. CONSTRUCT WHATSAPP MESSAGE (Safe encoding)
-        const rawMessage = `🚀 *NEW BOOKING REQUEST* 🚀\n\n` +
-            `*Customer:* ${bookingData.name}\n` +
-            `*Phone:* ${bookingData.phone}\n` +
-            `*Email:* ${bookingData.email}\n\n` +
-            `*Trip Details:* \n` +
-            `📍 *Route:* ${bookingData.routeType}\n` +
-            `🚗 *Car:* ${bookingData.carType}\n` +
-            `📅 *Date:* ${bookingData.date}\n` +
-            `⏰ *Time:* ${bookingData.timeHour}:${bookingData.timeMinute} ${bookingData.timePeriod}\n\n` +
-            `*Addresses:* \n` +
-            `🏠 *Pickup:* ${bookingData.pickup}\n` +
-            `🏁 *Drop:* ${bookingData.drop}\n\n` +
-            `💬 *Special Requests:* ${bookingData.specialRequests || 'None'}\n\n` +
-            `👤 *Requested Driver:* ${selectedDriver?.name || 'Any'}`;
+        try {
+            // ═══════════════════════════════════════════════════
+            // STEP 1: SAVE CUSTOMER TO "customers" TABLE
+            // ═══════════════════════════════════════════════════
+            // "upsert" means: if this phone number already exists, 
+            // update their name/email. If it's new, create a new row.
+            const { error: customerError } = await supabase
+                .from('customers')
+                .upsert(
+                    {
+                        phone_number: bookingData.phone,
+                        name: bookingData.name,
+                        email: bookingData.email
+                    },
+                    { onConflict: 'phone_number' }
+                );
 
-        const whatsappUrl = `https://wa.me/${OWNER_PHONE}?text=${encodeURIComponent(rawMessage)}`;
+            if (customerError) {
+                console.error('Customer save failed:', customerError);
+                alert('Could not save customer details. Please try again.');
+                setIsSubmitting(false);
+                return;
+            }
 
-        // ✅ 2. OPEN WHATSAPP
-        window.open(whatsappUrl, '_blank');
-        
-        // ✅ 3. RESET UI
+            // ═══════════════════════════════════════════════════
+            // STEP 2: BUILD THE PICKUP TIMESTAMP
+            // ═══════════════════════════════════════════════════
+            // Convert "2026-04-16" + "1" + "30" + "PM" → "2026-04-16T13:30:00+05:30"
+            const pickupTimestamp = buildTimestamp(
+                bookingData.date,
+                bookingData.timeHour,
+                bookingData.timeMinute,
+                bookingData.timePeriod
+            );
+
+            // ═══════════════════════════════════════════════════
+            // STEP 3: SAVE BOOKING TO "bookings" TABLE
+            // ═══════════════════════════════════════════════════
+            const { error: bookingError } = await supabase
+                .from('bookings')
+                .insert({
+                    customer_number: bookingData.phone,
+                    pickup_time: pickupTimestamp,
+                    pickup_location: bookingData.pickup,
+                    dropoff_location: bookingData.drop,
+                    route_type: bookingData.routeType,
+                    requested_category: bookingData.carType,
+                    special_requests: bookingData.specialRequests || null,
+                    status: 'Pending',
+                    // taxi_licence and driver_licence are left NULL
+                    // Owner will assign them later after reviewing the request
+                });
+
+            if (bookingError) {
+                console.error('Booking save failed:', bookingError);
+                alert('Could not save booking. Please try again.');
+                setIsSubmitting(false);
+                return;
+            }
+
+            // ═══════════════════════════════════════════════════
+            // STEP 4: CONSTRUCT & SEND WHATSAPP MESSAGE
+            // ═══════════════════════════════════════════════════
+            const rawMessage = `🚀 *NEW BOOKING REQUEST* 🚀\n\n` +
+                `*Customer:* ${bookingData.name}\n` +
+                `*Phone:* ${bookingData.phone}\n` +
+                `*Email:* ${bookingData.email}\n\n` +
+                `*Trip Details:* \n` +
+                ` *Route:* ${bookingData.routeType}\n` +
+                `*Car:* ${bookingData.carType}\n` +
+                `*Date:* ${bookingData.date}\n` +
+                `*Time:* ${bookingData.timeHour}:${bookingData.timeMinute} ${bookingData.timePeriod}\n\n` +
+                `*Addresses:* \n` +
+                `*Pickup:* ${bookingData.pickup}\n` +
+                `*Drop:* ${bookingData.drop}\n\n` +
+                `*Special Requests:* ${bookingData.specialRequests || 'None'}\n\n` +
+                `*Requested Driver:* ${selectedDriver?.name || 'Any'}`;
+
+            const whatsappUrl = `https://wa.me/${OWNER_PHONE}?text=${encodeURIComponent(rawMessage)}`;
+
+            // OPEN WHATSAPP
+            window.open(whatsappUrl, '_blank');
+
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            alert('Something went wrong. Please check your internet and try again.');
+        }
+
+        // RESET UI
+        setIsSubmitting(false);
         setSelectedDriver(null);
     };
 
@@ -124,6 +207,7 @@ export function useDriversLogic() {
         driversData,
         selectedDriver,
         bookingData,
+        isSubmitting,
         formatDate,
         handleSelectDriver,
         handleConfirmBooking,

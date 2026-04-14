@@ -8,6 +8,7 @@ export default function DriversPage() {
         driversData,
         selectedDriver,
         bookingData,
+        isSubmitting,
         formatDate,
         handleSelectDriver,
         handleConfirmBooking,
@@ -119,10 +120,15 @@ export default function DriversPage() {
                         </div>
 
                         <div className="modal-actions">
-                            <button className="modal-cancel-btn" onClick={handleCancelConfirmation}>Back</button>
-                            <button className="modal-submit-btn" onClick={handleConfirmBooking} style={{ background: '#25D366' }}>
-                                <span className="material-icons" style={{ fontSize: '18px' }}>send</span>
-                                Send Request via WhatsApp
+                            <button className="modal-cancel-btn" onClick={handleCancelConfirmation} disabled={isSubmitting}>Back</button>
+                            <button
+                                className="modal-submit-btn"
+                                onClick={handleConfirmBooking}
+                                disabled={isSubmitting}
+                                style={{ background: isSubmitting ? '#999' : '#25D366' }}
+                            >
+                                <span className="material-icons" style={{ fontSize: '18px' }}>{isSubmitting ? 'hourglass_empty' : 'send'}</span>
+                                {isSubmitting ? 'Saving Booking...' : 'Send Request via WhatsApp'}
                             </button>
                         </div>
                     </div>

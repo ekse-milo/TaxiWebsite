@@ -31,17 +31,17 @@
 
 .search-box {
     background: white;
-    padding: 50px 60px; /* Increased padding */
+    padding: 50px 60px;
     border-radius: 24px;
     width: 95%;
-    max-width: 1100px; /* Increased max-width */
+    max-width: 1100px;
     display: flex;
     flex-direction: column;
     gap: 25px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Route Selection Styles */
+
 .route-selection-container {
     display: flex;
     justify-content: center;
@@ -129,7 +129,8 @@
     box-shadow: 0 0 0 4px rgba(0, 85, 119, 0.1);
 }
 
-.input-box input, .input-box textarea {
+.input-box input,
+.input-box textarea {
     flex: 1;
     border: none;
     outline: none;
@@ -233,22 +234,22 @@
     .search-box {
         padding: 30px 20px;
     }
-    
+
     .address-row {
         flex-direction: column;
     }
-    
+
     .route-selection-container {
         gap: 10px;
     }
-    
+
     .route-option {
         padding: 8px 15px;
         font-size: 14px;
     }
 }
 
-/* 📅 Custom Calendar Modal Styles */
+/* Custom Calendar Modal Styles */
 .calendar-overlay {
     position: fixed;
     top: 0;
@@ -354,6 +355,11 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

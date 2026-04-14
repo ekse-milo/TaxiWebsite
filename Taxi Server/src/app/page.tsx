@@ -9,7 +9,7 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
 
-  // ✅ Single scroll effect (clean + correct)
+  // ingle scroll effect (clean + correct)
   useEffect(() => {
     // Force scroll to top on refresh
     window.scrollTo(0, 0);
@@ -24,7 +24,7 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ✅ Navigation handler
+  // Navigation handler
   const handleBooking = (car: string) => {
     console.log("Checking connection... Online status:", navigator.onLine);
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
