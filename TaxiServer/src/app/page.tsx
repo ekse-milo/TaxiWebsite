@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchVehicleCategories } from "./Drivers/logic";
-import './style.css';
+import styles from './page.module.css';
 
 // Helper to map DB names to local image files
 const getImagePath = (categoryName: string) => {
@@ -19,9 +19,11 @@ const getImagePath = (categoryName: string) => {
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
 
   // Scroll effect
   useEffect(() => {
@@ -58,85 +60,94 @@ export default function Home() {
   return (
     <>
       {/* Header */}
-      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="header-container">
-          <div className="logo">
-            <img src="/logo.png" alt="Website Logo" className="website-logo" />
+      <header className={`${styles.header} ${isScrolled || isMenuOpen ? styles.scrolled : ''}`}>
+
+        <div className={styles.headerContainer}>
+          <div className={styles.logo}>
+            <img src="/logo.png" alt="Website Logo" className={styles.websiteLogo} />
           </div>
 
-          <input type="checkbox" id="menu-toggle" className="menu-checkbox" />
-          <label htmlFor="menu-toggle" className="hamburger">
+          <input
+            type="checkbox"
+            id="menu-toggle"
+            className={styles.menuCheckbox}
+            checked={isMenuOpen}
+            onChange={(e) => setIsMenuOpen(e.target.checked)}
+          />
+
+          <label htmlFor="menu-toggle" className={styles.hamburger}>
             <span></span>
             <span></span>
             <span></span>
           </label>
 
-          <nav className="nav">
-            <a href="#packages" className="nav-link">PACKAGES</a>
-            <a href="#cars" className="nav-link">OUR FLEET</a>
-            <a href="#reviews" className="nav-link">REVIEWS</a>
-            <a href="#contact" className="nav-link">CONTACT</a>
+          <nav className={styles.nav}>
+            <a href="#packages" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>PACKAGES</a>
+            <a href="#cars" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>OUR FLEET</a>
+            <a href="#reviews" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>REVIEWS</a>
+            <a href="#contact" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>CONTACT</a>
           </nav>
+
         </div>
       </header>
 
       {/* Hero */}
-      <section className="hero-section">
-        <h1 className="hero-title">Experience Goa&apos;s Vibes</h1>
-        <h2 className="hero-subtitle">With Comfortable Rides</h2>
-        <p className="hero-text">
+      <section className={styles.heroSection}>
+        <h1 className={styles.heroTitle}>Experience Goa&apos;s Vibes</h1>
+        <h2 className={styles.heroSubtitle}>With Comfortable Rides</h2>
+        <p className={styles.heroText}>
           From sun-kissed beaches to heritage streets. We drive, you relax.
         </p>
       </section>
 
-      <hr className="section-divider" />
+      <hr className={styles.sectionDivider} />
 
       {/* Packages */}
-      <section id="packages" className="packages-section">
-        <h2 className="section-title">POPULAR PACKAGES</h2>
-        <p className="section-subtitle">
+      <section id="packages" className={styles.packagesSection}>
+        <h2 className={styles.sectionTitle}>POPULAR PACKAGES</h2>
+        <p className={styles.sectionSubtitle}>
           Curated trips for the best Goan experience.
         </p>
 
-        <div className="packages-container">
-          <div className="package-card">
-            <h3 className="nameColor">Airport Transfer</h3>
-            <p className="package-desc">
+        <div className={styles.packagesContainer}>
+          <div className={styles.packageCard}>
+            <h3 className={styles.nameColor}>Airport Transfer</h3>
+            <p className={styles.packageDesc}>
               Hassle-free pickup and drop to Dabolim or Mopa Airport.
             </p>
           </div>
 
-          <div className="package-card">
-            <h3 className="nameColor">City Tour</h3>
-            <p className="package-desc">
+          <div className={styles.packageCard}>
+            <h3 className={styles.nameColor}>City Tour</h3>
+            <p className={styles.packageDesc}>
               Explore Panjim, Old Goa Churches, and Shopping streets.
             </p>
           </div>
 
-          <div className="package-card">
-            <h3 className="nameColor">Sightseeing</h3>
-            <p className="package-desc">
+          <div className={styles.packageCard}>
+            <h3 className={styles.nameColor}>Sightseeing</h3>
+            <p className={styles.packageDesc}>
               North or South Goa beaches, Forts, and Waterfalls.
             </p>
           </div>
         </div>
       </section>
 
-      <hr className="section-divider" />
+      <hr className={styles.sectionDivider} />
 
       {/* Cars */}
-      <section id="cars" className="cars-section">
-        <h2 className="section-title">CHOOSE YOUR RIDE</h2>
-        <p className="section-subtitle">
+      <section id="cars" className={styles.carsSection}>
+        <h2 className={styles.sectionTitle}>CHOOSE YOUR RIDE</h2>
+        <p className={styles.sectionSubtitle}>
           Comfortable, Clean, and AC Cabs for every group size.
         </p>
 
-        <div className="cars-container">
+        <div className={styles.carsContainer}>
           {loading ? (
-            <div className="loading-spinner">Loading Fleet...</div>
+            <div className={styles.loadingSpinner}>Loading Fleet...</div>
           ) : (
             categories.map((cat) => (
-              <div key={cat.category_name} className="car-card">
+              <div key={cat.category_name} className={styles.carCard}>
                 <Image
                   src={getImagePath(cat.category_name)}
                   alt={cat.category_name}
@@ -144,11 +155,11 @@ export default function Home() {
                   width={150}
                 />
 
-                <h3 className="nameColor">{cat.category_name}</h3>
-                <p className="car-price">Starts ₹{cat.base_price} / day</p>
+                <h3 className={styles.nameColor}>{cat.category_name}</h3>
+                <p className={styles.carPrice}>Starts ₹{cat.base_price} / day</p>
 
                 <button
-                  className="btn-outline"
+                  className={styles.btnOutline}
                   onClick={() => handleBooking(cat.category_name)}
                 >
                   Book
@@ -159,55 +170,55 @@ export default function Home() {
         </div>
       </section>
 
-      <hr className="section-divider" />
+      <hr className={styles.sectionDivider} />
 
       {/* Reviews */}
-      <section id="reviews" className="reviews-section">
-        <h2 className="section-title">TRAVELER STORIES</h2>
+      <section id="reviews" className={styles.reviewsSection}>
+        <h2 className={styles.sectionTitle}>TRAVELER STORIES</h2>
 
-        <div className="reviews-container">
-          <div className="review-card">
-            <p className="review-quote">
+        <div className={styles.reviewsContainer}>
+          <div className={styles.reviewCard}>
+            <p className={styles.reviewQuote}>
               &quot;The driver was so polite and the car was spotless.&quot;
             </p>
-            <p className="review-author">- Sarah Jenkins</p>
+            <p className={styles.reviewAuthor}>- Sarah Jenkins</p>
           </div>
 
-          <div className="review-card">
-            <p className="review-quote">
+          <div className={styles.reviewCard}>
+            <p className={styles.reviewQuote}>
               &quot;Best rates we found for an airport drop.&quot;
             </p>
-            <p className="review-author">- Rahul Verma</p>
+            <p className={styles.reviewAuthor}>- Rahul Verma</p>
           </div>
 
-          <div className="review-card">
-            <p className="review-quote">
+          <div className={styles.reviewCard}>
+            <p className={styles.reviewQuote}>
               &quot;Smooth rides and great recommendations.&quot;
             </p>
-            <p className="review-author">- Mike & Team</p>
+            <p className={styles.reviewAuthor}>- Mike & Team</p>
           </div>
         </div>
       </section>
 
-      <hr className="section-divider" />
+      <hr className={styles.sectionDivider} />
 
       {/* Footer */}
-      <footer id="contact" className="footer">
+      <footer id="contact" className={styles.footer}>
         <h3>Companies Name</h3>
-        <p className="footer-tagline">
+        <p className={styles.footerTagline}>
           Making your Goan holidays smoother, one ride at a time.
         </p>
 
-        <div className="footer-contact-info">
+        <div className={styles.footerContactInfo}>
           <p><b>Phone: </b>Phone Number</p>
           <p><b>Email: </b>Email</p>
           <p><b>Address: </b>Address</p>
         </div>
 
-        <p className="footer-copyright">
+        <p className={styles.footerCopyright}>
           &copy; All rights reserved.
         </p>
       </footer>
     </>
   );
-}
+}

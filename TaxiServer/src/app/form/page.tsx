@@ -2,7 +2,8 @@
 
 import { Suspense } from 'react';
 import { useFormLogic } from './logic';
-import './form.css';
+import styles from './form.module.css';
+
 
 function FormContent() {
     const {
@@ -43,7 +44,7 @@ function FormContent() {
 
         const days = [];
         for (let i = 0; i < firstDay; i++) {
-            days.push(<div key={`empty-${i}`} className="calendar-day disabled"></div>);
+            days.push(<div key={`empty-${i}`} className={`${styles.calendarDay} ${styles.disabled}`}></div>);
         }
 
         for (let day = 1; day <= daysInMonth; day++) {
@@ -60,7 +61,7 @@ function FormContent() {
             days.push(
                 <div
                     key={day}
-                    className={`calendar-day ${isPast ? 'disabled' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+                    className={`${styles.calendarDay} ${isPast ? styles.disabled : ''} ${isToday ? styles.today : ''} ${isSelected ? styles.selected : ''}`}
                     onClick={() => !isPast && handleSelectDate(dateStr)}
                 >
                     {day}
@@ -70,39 +71,40 @@ function FormContent() {
         return days;
     };
 
+
     const displayDate = formData.date
         ? new Date(formData.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
         : 'Select Date';
 
     return (
         <>
-            <header className="form-header">
+            <header className={styles.formHeader}>
                 <h1>Bookings</h1>
             </header>
 
-            <section className="booking-section">
-                <div className="search-box">
-                    <div className="car-selection-display" style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <section className={styles.bookingSection}>
+                <div className={styles.searchBox}>
+                    <div className={styles.carSelectionDisplay} style={{ textAlign: 'center', marginBottom: '10px' }}>
                         <h2 style={{ color: '#005577', margin: '0 0 5px 0' }}>Booking {carType}</h2>
                         <p style={{ color: '#666', fontSize: '0.9rem' }}>Please select your journey type and fill in your details</p>
                     </div>
 
-                    <div className="route-selection-container">
+                    <div className={styles.routeSelectionContainer}>
                         {routes.map(route => (
                             <div
                                 key={route}
-                                className={`route-option ${routeType === route ? 'selected' : ''}`}
+                                className={`${styles.routeOption} ${routeType === route ? styles.selected : ''}`}
                                 onClick={() => setRouteType(route)}
                             >
-                                <div className="circle-check"></div>
+                                <div className={styles.circleCheck}></div>
                                 <span>{route}</span>
                             </div>
                         ))}
                     </div>
 
-                    <div className="user-column">
-                        <div className="input-group">
-                            <label className={`input-box ${showErrors && errors.name ? 'has-error' : ''}`}>
+                    <div className={styles.userColumn}>
+                        <div className={styles.inputGroup}>
+                            <label className={`${styles.inputBox} ${showErrors && errors.name ? styles.hasError : ''}`}>
                                 <span className="material-icons" style={{ color: '#005577' }}>person</span>
                                 <input
                                     type="text"
@@ -111,12 +113,12 @@ function FormContent() {
                                     onChange={(e) => handleInputChange('name', e.target.value)}
                                 />
                             </label>
-                            {showErrors && errors.name && <p className="error-msg">Enter a valid name</p>}
+                            {showErrors && errors.name && <p className={styles.errorMsg}>Enter a valid name</p>}
                         </div>
 
                         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-                            <div className="input-group" style={{ flex: 1, minWidth: '250px' }}>
-                                <label className={`input-box ${showErrors && errors.phone ? 'has-error' : ''}`}>
+                            <div className={styles.inputGroup} style={{ flex: 1, minWidth: '250px' }}>
+                                <label className={`${styles.inputBox} ${showErrors && errors.phone ? styles.hasError : ''}`}>
                                     <span className="material-icons" style={{ color: '#005577' }}>phone</span>
                                     <input
                                         type="tel"
@@ -125,11 +127,11 @@ function FormContent() {
                                         onChange={(e) => handleInputChange('phone', e.target.value)}
                                     />
                                 </label>
-                                {showErrors && errors.phone && <p className="error-msg">Enter valid 10-digit number</p>}
+                                {showErrors && errors.phone && <p className={styles.errorMsg}>Enter valid 10-digit number</p>}
                             </div>
 
-                            <div className="input-group" style={{ flex: 1, minWidth: '250px' }}>
-                                <label className={`input-box ${showErrors && errors.email ? 'has-error' : ''}`}>
+                            <div className={styles.inputGroup} style={{ flex: 1, minWidth: '250px' }}>
+                                <label className={`${styles.inputBox} ${showErrors && errors.email ? styles.hasError : ''}`}>
                                     <span className="material-icons" style={{ color: '#005577' }}>email</span>
                                     <input
                                         type="email"
@@ -138,14 +140,14 @@ function FormContent() {
                                         onChange={(e) => handleInputChange('email', e.target.value)}
                                     />
                                 </label>
-                                {showErrors && errors.email && <p className="error-msg">Enter a valid email address</p>}
+                                {showErrors && errors.email && <p className={styles.errorMsg}>Enter a valid email address</p>}
                             </div>
                         </div>
                     </div>
 
-                    <div className="address-row" style={{ marginTop: '5px' }}>
-                        <div className="input-group" style={{ flex: 1 }}>
-                            <label className={`input-box ${showErrors && errors.pickup ? 'has-error' : ''}`}>
+                    <div className={styles.addressRow} style={{ marginTop: '5px' }}>
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <label className={`${styles.inputBox} ${showErrors && errors.pickup ? styles.hasError : ''}`}>
                                 <span className="material-icons" style={{ color: '#005577' }}>place</span>
                                 <input
                                     type="text"
@@ -155,15 +157,15 @@ function FormContent() {
                                 />
                                 <span className="material-icons search-icon">search</span>
                             </label>
-                            {showErrors && errors.pickup && <p className="error-msg">Pickup address is required</p>}
+                            {showErrors && errors.pickup && <p className={styles.errorMsg}>Pickup address is required</p>}
                         </div>
 
-                        <div className="swap-icon" onClick={handleSwapAddresses}>
+                        <div className={styles.swapIcon} onClick={handleSwapAddresses}>
                             <span className="material-icons">swap_horiz</span>
                         </div>
 
-                        <div className="input-group" style={{ flex: 1 }}>
-                            <label className={`input-box ${showErrors && errors.drop ? 'has-error' : ''}`}>
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <label className={`${styles.inputBox} ${showErrors && errors.drop ? styles.hasError : ''}`}>
                                 <span className="material-icons" style={{ color: '#005577' }}>place</span>
                                 <input
                                     type="text"
@@ -173,14 +175,14 @@ function FormContent() {
                                 />
                                 <span className="material-icons search-icon">search</span>
                             </label>
-                            {showErrors && errors.drop && <p className="error-msg">Drop address is required</p>}
+                            {showErrors && errors.drop && <p className={styles.errorMsg}>Drop address is required</p>}
                         </div>
                     </div>
 
-                    <div className="date-time-row">
-                        <div className="input-group" style={{ flex: 1 }}>
+                    <div className={styles.dateTimeRow}>
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
                             <div
-                                className={`input-box ${showErrors && errors.date ? 'has-error' : ''}`}
+                                className={`${styles.inputBox} ${showErrors && errors.date ? styles.hasError : ''}`}
                                 onClick={openCalendar}
                                 style={{ cursor: 'pointer' }}
                             >
@@ -189,30 +191,30 @@ function FormContent() {
                                     {displayDate}
                                 </span>
                             </div>
-                            {showErrors && errors.date && <p className="error-msg">Select a date</p>}
+                            {showErrors && errors.date && <p className={styles.errorMsg}>Select a date</p>}
                         </div>
 
-                        <div className="input-group" style={{ flex: 1 }}>
-                            <div className="input-box">
+                        <div className={styles.inputGroup} style={{ flex: 1 }}>
+                            <div className={styles.inputBox}>
                                 <span className="material-icons" style={{ color: '#005577' }}>schedule</span>
-                                <div className="time-selectors">
+                                <div className={styles.timeSelectors}>
                                     <select
-                                        className="time-select"
+                                        className={styles.timeSelect}
                                         value={formData.timeHour}
                                         onChange={(e) => handleInputChange('timeHour', e.target.value)}
                                     >
                                         {hours.map(h => <option key={h} value={h}>{h}</option>)}
                                     </select>
-                                    <span className="time-divider">:</span>
+                                    <span className={styles.timeDivider}>:</span>
                                     <select
-                                        className="time-select"
+                                        className={styles.timeSelect}
                                         value={formData.timeMinute}
                                         onChange={(e) => handleInputChange('timeMinute', e.target.value)}
                                     >
                                         {minutes.map(m => <option key={m} value={m}>{m}</option>)}
                                     </select>
                                     <select
-                                        className="time-select"
+                                        className={styles.timeSelect}
                                         value={formData.timePeriod}
                                         onChange={(e) => handleInputChange('timePeriod', e.target.value)}
                                         style={{ marginLeft: '5px', color: '#005577', fontWeight: 'bold' }}
@@ -224,8 +226,8 @@ function FormContent() {
                         </div>
                     </div>
 
-                    <div className="input-group" style={{ marginTop: '10px' }}>
-                        <label className="input-box" style={{ alignItems: 'flex-start', borderRadius: '18px' }}>
+                    <div className={styles.inputGroup} style={{ marginTop: '10px' }}>
+                        <label className={styles.inputBox} style={{ alignItems: 'flex-start', borderRadius: '18px' }}>
                             <span className="material-icons" style={{ color: '#005577', marginTop: '10px' }}>notes</span>
                             <textarea
                                 placeholder="Special Requests (Example: I have 3 large bags, traveling with a pet, or need a child seat)"
@@ -236,9 +238,9 @@ function FormContent() {
                     </div>
                 </div>
 
-                <div className="submit-container" style={{ marginTop: '30px', textAlign: 'center', width: '100%' }}>
+                <div className={styles.submitContainer} style={{ marginTop: '30px', textAlign: 'center', width: '100%' }}>
                     <button
-                        className={`submit-btn ${isFormValid ? 'active' : ''}`}
+                        className={`${styles.submitBtn} ${isFormValid ? styles.active : ''}`}
                         disabled={!isFormValid && showErrors}
                         onClick={handleBooking}
                         style={{ width: '100%', maxWidth: '400px' }}
@@ -253,8 +255,7 @@ function FormContent() {
 
                     <br/><br/>
                     <a href='/'><button
-                        className="home-btn "
-                        // style={{ width: '100%', maxWidth: '400px' }}
+                        className={styles.homeBtn}
                     >
                         Home
                     </button></a>
@@ -262,26 +263,27 @@ function FormContent() {
             </section>
 
             {showCalendar && (
-                <div className="calendar-overlay" onClick={closeCalendar}>
-                    <div className="calendar-modal" onClick={e => e.stopPropagation()}>
-                        <div className="calendar-header">
-                            <button className="calendar-nav-btn" onClick={prevMonth}>
+                <div className={styles.calendarOverlay} onClick={closeCalendar}>
+                    <div className={styles.calendarModal} onClick={e => e.stopPropagation()}>
+                        <div className={styles.calendarHeader}>
+                            <button className={styles.calendarNavBtn} onClick={prevMonth}>
                                 <span className="material-icons">chevron_left</span>
                             </button>
                             <h3>{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
-                            <button className="calendar-nav-btn" onClick={nextMonth}>
+                            <button className={styles.calendarNavBtn} onClick={nextMonth}>
                                 <span className="material-icons">chevron_right</span>
                             </button>
                         </div>
-                        <div className="calendar-grid">
+                        <div className={styles.calendarGrid}>
                             {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                                <div key={day} className="weekday">{day}</div>
+                                <div key={day} className={styles.weekday}>{day}</div>
                             ))}
                             {generateCalendarDays()}
                         </div>
                     </div>
                 </div>
             )}
+
         </>
     );
 }

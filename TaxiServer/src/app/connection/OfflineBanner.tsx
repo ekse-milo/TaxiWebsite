@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import './OfflineBanner.css';
+import styles from './OfflineBanner.module.css';
 
 export default function OfflineBanner() {
   const [isOffline, setIsOffline] = useState(false);
@@ -67,11 +67,11 @@ export default function OfflineBanner() {
   // 1. Loading State
   if (isChecking) {
     return (
-      <div className="checking-overlay">
-        <div className="checking-content">
-          <div className="spinner"></div>
-          <h2 className="checking-title">{checkMessage}</h2>
-          <p className="checking-text">Please wait while we verify your connection status.</p>
+      <div className={styles.checkingOverlay}>
+        <div className={styles.checkingContent}>
+          <div className={styles.spinner}></div>
+          <h2 className={styles.checkingTitle}>{checkMessage}</h2>
+          <p className={styles.checkingText}>Please wait while we verify your connection status.</p>
         </div>
       </div>
     );
@@ -80,8 +80,8 @@ export default function OfflineBanner() {
   // 2. Offline State
   if (isOffline) {
     return (
-      <div className="offline-overlay">
-        <div className="offline-content">
+      <div className={styles.offlineOverlay}>
+        <div className={styles.offlineContent}>
           <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="18" r="2" fill="#005577" />
             <path d="M5 11C7.8 8.2 11.7 7.5 15 8.7" stroke="#005577" strokeWidth="2" strokeLinecap="round" />
@@ -90,8 +90,8 @@ export default function OfflineBanner() {
             <path d="M17 17L21 21M21 17L17 21" stroke="#005577" strokeWidth="2" strokeLinecap="round" />
           </svg>
 
-          <h2 className="offline-title">No Internet Connection</h2>
-          <p className="offline-text">
+          <h2 className={styles.offlineTitle}>No Internet Connection</h2>
+          <p className={styles.offlineText}>
             Oops! It looks like you're offline. Please check your connection to continue your taxi booking.
           </p>
           <button

@@ -1,7 +1,7 @@
 'use client';
 
 import { useDriversLogic } from './logic';
-import './drivers.css';
+import styles from './drivers.module.css';
 
 export default function DriversPage() {
     const {
@@ -17,27 +17,28 @@ export default function DriversPage() {
     } = useDriversLogic();
 
     return (
-        <section className="drivers-body">
-            <header className="drivers-header">
+        <section className={styles.driversBody}>
+            <header className={styles.driversHeader}>
                 <h1>Our Professional Drivers</h1>
             </header>
 
-            <div className="drivers-container">
+            <div className={styles.driversContainer}>
                 {isLoading ? (
-                    <div className="loading-state">
-                        <span className="material-icons rotating">hourglass_empty</span>
+                    <div className={styles.loadingState}>
+                        <span className={`material-icons ${styles.rotating}`}>hourglass_empty</span>
                         <p>Loading Professional Drivers...</p>
                     </div>
                 ) : (
-                    <div className="drivers-grid">
+                    <div className={styles.driversGrid}>
                         {driversData.map((driver, index) => (
-                            <div key={driver.id || index} className="driver-card" onClick={() => handleSelectDriver(driver)}>
-                                <div className="driver-card-top"></div>
-                                <div className="driver-avatar">
+                            <div key={driver.id || index} className={styles.driverCard} onClick={() => handleSelectDriver(driver)}>
+                                <div className={styles.driverCardTop}></div>
+                                <div className={styles.driverAvatar}>
                                     <span className="material-icons" style={{ fontSize: '40px' }}>account_circle</span>
                                 </div>
-                                <h3 className="driver-name">{driver.name}</h3>
-                                <div className="driver-rating">
+                                <h3 className={styles.driverName}>{driver.name}</h3>
+                                <div className={styles.driverRating}>
+
                                     {driver.rating && (
                                         <>
                                             <span className="material-icons" style={{ color: '#FFD700', fontSize: '18px' }}>star</span>
@@ -49,36 +50,36 @@ export default function DriversPage() {
                                     )}
                                 </div>
 
-                                <div className={`status-badge ${driver.is_available ? 'status-available' : 'status-unavailable'}`}>
-                                    <div className="status-dot"></div>
+                                <div className={`${styles.statusBadge} ${driver.is_available ? styles.statusAvailable : styles.statusUnavailable}`}>
+                                    <div className={styles.statusDot}></div>
                                     {driver.is_available ? 'Available Now' : 'On Trip'}
                                 </div>
 
-                                <div className="driver-details">
-                                    <div className="detail-row">
-                                        <div className="detail-icon"><span className="material-icons">local_taxi</span></div>
-                                        <div className="detail-text">
-                                            <span className="detail-label">Taxi Service</span>
-                                            <span className="detail-value">Licensed Professional</span>
+                                <div className={styles.driverDetails}>
+                                    <div className={styles.detailRow}>
+                                        <div className={styles.detailIcon}><span className="material-icons">local_taxi</span></div>
+                                        <div className={styles.detailText}>
+                                            <span className={styles.detailLabel}>Taxi Service</span>
+                                            <span className={styles.detailValue}>Licensed Professional</span>
                                         </div>
                                     </div>
-                                    <div className="detail-row">
-                                        <div className="detail-icon"><span className="material-icons">verified</span></div>
-                                        <div className="detail-text">
-                                            <span className="detail-label">Verify ID</span>
-                                            <span className="detail-value">{driver.license_number}</span>
+                                    <div className={styles.detailRow}>
+                                        <div className={styles.detailIcon}><span className="material-icons">verified</span></div>
+                                        <div className={styles.detailText}>
+                                            <span className={styles.detailLabel}>Verify ID</span>
+                                            <span className={styles.detailValue}>{driver.license_number}</span>
                                         </div>
                                     </div>
-                                    <div className="detail-row">
-                                        <div className="detail-icon"><span className="material-icons">phone</span></div>
-                                        <div className="detail-text">
-                                            <span className="detail-label">Direct Contact</span>
-                                            <span className="detail-value">{driver.phone_number}</span>
+                                    <div className={styles.detailRow}>
+                                        <div className={styles.detailIcon}><span className="material-icons">phone</span></div>
+                                        <div className={styles.detailText}>
+                                            <span className={styles.detailLabel}>Direct Contact</span>
+                                            <span className={styles.detailValue}>{driver.phone_number}</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <button className="select-driver-btn">
+                                <button className={styles.selectDriverBtn}>
                                     Select {driver.name.split(' ')[0]}
                                     <span className="material-icons">chevron_right</span>
                                 </button>
@@ -90,68 +91,67 @@ export default function DriversPage() {
 
             <br /><br />
             <a href='/'><button
-                className="home-btn "
-            // style={{ width: '100%', maxWidth: '400px' }}
+                className={styles.homeBtn}
             >
                 Home
             </button></a>
 
             {selectedDriver && (
-                <div className="modal-overlay" onClick={handleCancelConfirmation}>
-                    <div className="summary-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
+                <div className={styles.modalOverlay} onClick={handleCancelConfirmation}>
+                    <div className={styles.summaryModal} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
                             <span className="material-icons" style={{ color: '#005577', fontSize: '48px' }}>whatsapp</span>
                             <h2>Confirm Booking</h2>
-                            <p className="modal-subtitle">We will redirect you to WhatsApp to finalize with our team.</p>
+                            <p className={styles.modalSubtitle}>We will redirect you to WhatsApp to finalize with our team.</p>
                         </div>
 
-                        <div className="modal-content">
-                            <div className="summary-section">
+                        <div className={styles.modalContent}>
+                            <div className={styles.summarySection}>
                                 <h4>Trip Overview</h4>
-                                <div className="summary-grid">
-                                    <div className="summary-item">
-                                        <span className="summar-label">Route</span>
-                                        <span className="summary-value" style={{ color: '#005577', fontWeight: 'bold' }}>{bookingData?.routeType}</span>
+                                <div className={styles.summaryGrid}>
+                                    <div className={styles.summaryItem}>
+                                        <span className={styles.summarLabel}>Route</span>
+                                        <span className={styles.summaryValue} style={{ color: '#005577', fontWeight: 'bold' }}>{bookingData?.routeType}</span>
                                     </div>
-                                    <div className="summary-item">
-                                        <span className="summar-label">Car</span>
-                                        <span className="summary-value">{bookingData?.carType}</span>
+                                    <div className={styles.summaryItem}>
+                                        <span className={styles.summarLabel}>Car</span>
+                                        <span className={styles.summaryValue}>{bookingData?.carType}</span>
                                     </div>
-                                    <div className="summary-item">
-                                        <span className="summar-label">Date</span>
-                                        <span className="summary-value">{bookingData?.date ? formatDate(bookingData.date) : '-'}</span>
+                                    <div className={styles.summaryItem}>
+                                        <span className={styles.summarLabel}>Date</span>
+                                        <span className={styles.summaryValue}>{bookingData?.date ? formatDate(bookingData.date) : '-'}</span>
                                     </div>
-                                    <div className="summary-item">
-                                        <span className="summar-label">Time</span>
-                                        <span className="summary-value">{bookingData?.timeHour}:{bookingData?.timeMinute} {bookingData?.timePeriod}</span>
+                                    <div className={styles.summaryItem}>
+                                        <span className={styles.summarLabel}>Time</span>
+                                        <span className={styles.summaryValue}>{bookingData?.timeHour}:{bookingData?.timeMinute} {bookingData?.timePeriod}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="summary-section">
+                            <div className={styles.summarySection}>
                                 <h4>Addresses</h4>
-                                <div className="summary-item" style={{ marginBottom: '10px' }}>
-                                    <span className="summar-label">Pickup</span>
-                                    <span className="summary-value">{bookingData?.pickup}</span>
+                                <div className={styles.summaryItem} style={{ marginBottom: '10px' }}>
+                                    <span className={styles.summarLabel}>Pickup</span>
+                                    <span className={styles.summaryValue}>{bookingData?.pickup}</span>
                                 </div>
-                                <div className="summary-item">
-                                    <span className="summar-label">Drop</span>
-                                    <span className="summary-value">{bookingData?.drop}</span>
+                                <div className={styles.summaryItem}>
+                                    <span className={styles.summarLabel}>Drop</span>
+                                    <span className={styles.summaryValue}>{bookingData?.drop}</span>
                                 </div>
                             </div>
 
                             {bookingData?.specialRequests && (
-                                <div className="summary-section">
+                                <div className={styles.summarySection}>
                                     <h4>Special Requests</h4>
                                     <p style={{ fontSize: '0.9rem', color: '#333', fontStyle: 'italic' }}>"{bookingData.specialRequests}"</p>
                                 </div>
                             )}
                         </div>
 
-                        <div className="modal-actions">
-                            <button className="modal-cancel-btn" onClick={handleCancelConfirmation} disabled={isSubmitting}>Back</button>
+                        <div className={styles.modalActions}>
+                            <button className={styles.modalCancelBtn} onClick={handleCancelConfirmation} disabled={isSubmitting}>Back</button>
                             <button
-                                className="modal-submit-btn"
+                                className={styles.modalSubmitBtn}
                                 onClick={handleConfirmBooking}
                                 disabled={isSubmitting}
                                 style={{ background: isSubmitting ? '#999' : '#25D366' }}
@@ -166,3 +166,4 @@ export default function DriversPage() {
         </section>
     );
 }
+

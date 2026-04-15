@@ -1,4 +1,4 @@
-.form-header {
+.formHeader {
     background-color: #005577;
     color: white;
     width: 100%;
@@ -10,14 +10,14 @@
     z-index: 1000;
 }
 
-.form-header h1 {
+.formHeader h1 {
     margin: 0;
     font-size: 32px;
     font-weight: 600;
     letter-spacing: 1px;
 }
 
-.booking-section {
+.bookingSection {
     width: 100%;
     min-height: 100vh;
     padding-top: 120px;
@@ -29,7 +29,7 @@
     background-color: #fff9db;
 }
 
-.search-box {
+.searchBox {
     background: white;
     padding: 50px 60px;
     border-radius: 24px;
@@ -41,8 +41,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-
-.route-selection-container {
+.routeSelectionContainer {
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -50,7 +49,7 @@
     flex-wrap: wrap;
 }
 
-.route-option {
+.routeOption {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -62,18 +61,18 @@
     transition: all 0.3s ease;
 }
 
-.route-option:hover {
+.routeOption:hover {
     border-color: #005577;
     background: #f0f7f9;
 }
 
-.route-option.selected {
+.routeOption.selected {
     background: #005577;
     border-color: #005577;
     color: white;
 }
 
-.circle-check {
+.circleCheck {
     width: 20px;
     height: 20px;
     border: 2px solid #005577;
@@ -84,12 +83,12 @@
     transition: all 0.2s ease;
 }
 
-.route-option.selected .circle-check {
+.routeOption.selected .circleCheck {
     border-color: white;
     background: white;
 }
 
-.circle-check::after {
+.circleCheck::after {
     content: '';
     width: 10px;
     height: 10px;
@@ -98,23 +97,23 @@
     display: none;
 }
 
-.route-option.selected .circle-check::after {
+.routeOption.selected .circleCheck::after {
     display: block;
 }
 
-.user-column {
+.userColumn {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.address-row {
+.addressRow {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.input-box {
+.inputBox {
     flex: 1;
     display: flex;
     align-items: center;
@@ -125,13 +124,13 @@
     transition: all 0.2s ease;
 }
 
-.input-box:focus-within {
+.inputBox:focus-within {
     border-color: #005577;
     box-shadow: 0 0 0 4px rgba(0, 85, 119, 0.1);
 }
 
-.input-box input,
-.input-box textarea {
+.inputBox input,
+.inputBox textarea {
     flex: 1;
     border: none;
     outline: none;
@@ -142,17 +141,17 @@
     resize: none;
 }
 
-.input-box textarea {
+.inputBox textarea {
     height: 80px;
 }
 
-.swap-icon {
+.swapIcon {
     font-size: 32px;
     cursor: pointer;
     color: #005577;
 }
 
-.date-time-row {
+.dateTimeRow {
     display: flex;
     gap: 20px;
     width: 100%;
@@ -160,13 +159,13 @@
 }
 
 @media (max-width: 768px) {
-    .date-time-row {
+    .dateTimeRow {
         flex-direction: column;
         gap: 15px;
     }
 }
 
-.time-selectors {
+.timeSelectors {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -174,7 +173,7 @@
     padding-left: 10px;
 }
 
-.time-select {
+.timeSelect {
     border: none;
     background: transparent;
     font-size: 16px;
@@ -186,29 +185,29 @@
     border-radius: 4px;
 }
 
-.time-select:hover {
+.timeSelect:hover {
     background: #f0f7f9;
 }
 
-.time-divider {
+.timeDivider {
     font-weight: bold;
     color: #005577;
 }
 
-.input-group {
+.inputGroup {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.error-msg {
+.errorMsg {
     color: #d32f2f;
     font-size: 0.75rem;
     margin: 0 0 0 15px;
     font-weight: 500;
 }
 
-.submit-btn, .home-btn {
+.submitBtn, .homeBtn {
     background-color: #d1d5db;
     color: #fff;
     border: none;
@@ -220,53 +219,38 @@
     transition: all 0.3s ease;
 }
 
-.submit-btn.active, .home-btn {
-    background: #005577;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2);
+.submitBtn.active, .homeBtn {
+    background: #005577 !important;
+    cursor: pointer !important;
+    box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2) !important;
 }
 
-.submit-btn.active:hover, .home-btn:hover {
-    background: #004466;
+.submitBtn.active:hover, .homeBtn:hover {
+    background: #004466 !important;
     transform: translateY(-2px);
 }
 
-.home_btn {
-    background-color: #d1d5db;
-    color: #fff;
-    border: none;
-    padding: 16px 60px;
-    border-radius: 36px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: not-allowed;
-    transition: all 0.3s ease;
-    background: #005577;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2);
-}
-
 @media (max-width: 768px) {
-    .search-box {
+    .searchBox {
         padding: 30px 20px;
     }
 
-    .address-row {
+    .addressRow {
         flex-direction: column;
     }
 
-    .route-selection-container {
+    .routeSelectionContainer {
         gap: 10px;
     }
 
-    .route-option {
+    .routeOption {
         padding: 8px 15px;
         font-size: 14px;
     }
 }
 
 /* Custom Calendar Modal Styles */
-.calendar-overlay {
+.calendarOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -281,7 +265,7 @@
     animation: fadeIn 0.3s ease;
 }
 
-.calendar-modal {
+.calendarModal {
     background: white;
     border-radius: 24px;
     width: 90%;
@@ -290,20 +274,20 @@
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
 }
 
-.calendar-header {
+.calendarHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.calendar-header h3 {
+.calendarHeader h3 {
     margin: 0;
     color: #005577;
     font-size: 1.2rem;
 }
 
-.calendar-grid {
+.calendarGrid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
@@ -319,7 +303,7 @@
     font-size: 0.8rem;
 }
 
-.calendar-day {
+.calendarDay {
     height: 45px;
     display: flex;
     align-items: center;
@@ -331,28 +315,29 @@
     color: #333;
 }
 
-.calendar-day.disabled {
-    color: #ccc;
-    cursor: not-allowed;
-    text-decoration: line-through;
+.disabled {
+    color: #ccc !important;
+    cursor: not-allowed !important;
+    text-decoration: line-through !important;
 }
 
-.calendar-day:not(.disabled):hover {
+.calendarDay:not(.disabled):hover {
     background: #e3f2fd;
     color: #005577;
 }
 
-.calendar-day.selected {
-    background: #005577;
-    color: white;
+.selected {
+    background: #005577 !important;
+    color: white !important;
 }
 
-.calendar-day.today {
-    border: 2px solid #005577;
-    font-weight: bold;
+.today {
+    border: 2px solid #005577 !important;
+    font-weight: bold !important;
 }
 
-.calendar-nav-btn {
+
+.calendarNavBtn {
     background: #f0f7f9;
     border: none;
     padding: 8px;
@@ -365,7 +350,7 @@
     transition: all 0.2s;
 }
 
-.calendar-nav-btn:hover {
+.calendarNavBtn:hover {
     background: #005577;
     color: white;
 }

@@ -1,4 +1,4 @@
-.drivers-body {
+.driversBody {
     background-color: #fff9db;
     min-height: 100vh;
     padding-top: 180px;
@@ -6,7 +6,7 @@
     margin: 0;
 }
 
-.drivers-header {
+.driversHeader {
     background-color: #005577;
     color: white;
     width: 100%;
@@ -19,20 +19,20 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.drivers-header h1 {
+.driversHeader h1 {
     margin: 0;
     font-size: 32px;
     font-weight: 600;
     letter-spacing: 1px;
 }
 
-.drivers-container {
+.driversContainer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.drivers-section-title {
+.driversSectionTitle {
     color: #005577;
     text-align: center;
     font-size: 2.5rem;
@@ -40,20 +40,20 @@
     font-weight: 700;
 }
 
-.drivers-section-subtitle {
+.driversSectionSubtitle {
     text-align: center;
     color: #666;
     margin-bottom: 50px;
     font-size: 1.1rem;
 }
 
-.drivers-grid {
+.driversGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 35px;
 }
 
-.driver-card {
+.driverCard {
     background: white;
     border-radius: 20px;
     padding: 35px 30px 25px 30px;
@@ -67,14 +67,13 @@
     border: 2px solid transparent;
 }
 
-.driver-card:hover {
+.driverCard:hover {
     transform: translateY(-8px);
     box-shadow: 0 16px 40px rgba(0, 85, 119, 0.15);
     border-color: #005577;
 }
 
-
-.driver-card-top {
+.driverCardTop {
     position: absolute;
     top: 0;
     left: 0;
@@ -84,7 +83,7 @@
     z-index: 1;
 }
 
-.driver-avatar {
+.driverAvatar {
     width: 85px;
     height: 85px;
     background-color: #fdee00;
@@ -99,12 +98,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.driver-avatar .material-icons {
+.driverAvatar .material-icons {
     font-size: 45px;
     color: #005577;
 }
 
-.driver-name {
+.driverName {
     text-align: center;
     color: #222;
     font-size: 1.5rem;
@@ -113,7 +112,21 @@
     position: relative;
 }
 
-.status-badge {
+.driverRating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 20px;
+    z-index: 2;
+    position: relative;
+    font-size: 0.9rem;
+    color: #444;
+    font-weight: 600;
+}
+
+
+.statusBadge {
     align-self: center;
     padding: 6px 18px;
     border-radius: 30px;
@@ -127,41 +140,41 @@
     position: relative;
 }
 
-.status-available {
+.statusAvailable {
     background-color: #e8f5e9;
-    color: #2e7d32;
+    color: #2e7d32 !important;
     border: 1px solid #c8e6c9;
 }
 
-.status-unavailable {
+.statusUnavailable {
     background-color: #ffebee;
-    color: #c62828;
+    color: #c62828 !important;
     border: 1px solid #ffcdd2;
 }
 
-.status-badge .status-dot {
+.statusBadge .statusDot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
 }
 
-.status-available .status-dot {
+.statusAvailable .statusDot {
     background-color: #4CAF50;
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-    animation: pulse-green 2s infinite;
+    animation: pulseGreen 2s infinite;
 }
 
-.status-unavailable .status-dot {
+.statusUnavailable .statusDot {
     background-color: #f44336;
 }
 
-.home-btn {
+.homeBtn {
     display: block;
     margin-left: auto;
     margin-right: auto;
     background-color: #d1d5db;
     color: #fff;
-    background: #005577;
+    background: #005577 !important;
     border: none;
     padding: 16px 60px;
     border-radius: 36px;
@@ -171,12 +184,12 @@
     box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2);
 }
 
-.home-btn:hover {
-    background: #004466;
+.homeBtn:hover {
+    background: #004466 !important;
     transform: translateY(-2px);
 }
 
-@keyframes pulse-green {
+@keyframes pulseGreen {
     0% {
         box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.5);
     }
@@ -190,20 +203,20 @@
     }
 }
 
-.driver-details {
+.driverDetails {
     display: flex;
     flex-direction: column;
     gap: 18px;
     flex-grow: 1;
 }
 
-.detail-row {
+.detailRow {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.detail-icon {
+.detailIcon {
     width: 40px;
     height: 40px;
     border-radius: 12px;
@@ -214,18 +227,18 @@
     flex-shrink: 0;
 }
 
-.detail-icon .material-icons {
+.detailIcon .materialIcons {
     color: #005577;
     font-size: 20px;
 }
 
-.detail-text {
+.detailText {
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-.detail-label {
+.detailLabel {
     font-size: 0.75rem;
     color: #777;
     text-transform: uppercase;
@@ -234,7 +247,7 @@
     margin-bottom: 2px;
 }
 
-.detail-value {
+.detailValue {
     color: #333;
     font-size: 1rem;
     font-weight: 500;
@@ -243,7 +256,7 @@
     text-overflow: ellipsis;
 }
 
-.driver-footer {
+.driverFooter {
     margin-top: 15px;
     padding-top: 15px;
     border-top: 1px dashed #eee;
@@ -253,7 +266,7 @@
     font-weight: 500;
 }
 
-.select-driver-btn {
+.selectDriverBtn {
     margin-top: 20px;
     background: #005577;
     color: white;
@@ -269,13 +282,12 @@
     transition: all 0.2s;
 }
 
-.driver-card:hover .select-driver-btn {
+.driverCard:hover .selectDriverBtn {
     background: #007799;
     transform: translateY(-2px);
 }
 
-
-.modal-overlay {
+.modalOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -300,7 +312,7 @@
     }
 }
 
-.summary-modal {
+.summaryModal {
     background: white;
     width: 90%;
     max-width: 550px;
@@ -323,28 +335,28 @@
     }
 }
 
-.modal-header {
+.modalHeader {
     background: #005577;
     color: white;
     padding: 30px;
     text-align: center;
 }
 
-.modal-header h2 {
+.modalHeader h2 {
     margin: 0;
     font-size: 1.8rem;
 }
 
-.modal-subtitle {
+.modalSubtitle {
     font-size: 0.9rem;
     opacity: 0.8;
 }
 
-.modal-content {
+.modalContent {
     padding: 30px;
 }
 
-.summary-section {
+.summarySection {
     margin-bottom: 25px;
     background: #f8f9fa;
     padding: 20px;
@@ -352,7 +364,7 @@
     border-left: 5px solid #005577;
 }
 
-.summary-section h4 {
+.summarySection h4 {
     margin: 0 0 15px 0;
     color: #005577;
     font-size: 1rem;
@@ -360,37 +372,37 @@
     letter-spacing: 1px;
 }
 
-.summary-grid {
+.summaryGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
 }
 
-.summary-item {
+.summaryItem {
     display: flex;
     flex-direction: column;
 }
 
-.summar-label {
+.summarLabel {
     font-size: 0.75rem;
     color: #666;
     font-weight: 700;
     text-transform: uppercase;
 }
 
-.summary-value {
+.summaryValue {
     color: #222;
     font-weight: 500;
     font-size: 1rem;
 }
 
-.modal-actions {
+.modalActions {
     display: flex;
     gap: 15px;
     padding: 0 30px 30px 30px;
 }
 
-.modal-cancel-btn {
+.modalCancelBtn {
     flex: 1;
     padding: 14px 0;
     border-radius: 15px;
@@ -402,12 +414,12 @@
     transition: all 0.2s;
 }
 
-.modal-cancel-btn:hover {
+.modalCancelBtn:hover {
     background: #f8f8f8;
     border-color: #ccc;
 }
 
-.modal-submit-btn {
+.modalSubmitBtn {
     flex: 1.5;
     padding: 14px 0;
     border-radius: 15px;
@@ -420,124 +432,59 @@
     transition: all 0.2s;
 }
 
-.modal-submit-btn:hover {
+.modalSubmitBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 25px rgba(0, 85, 119, 0.3);
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
-    .drivers-body {
+    .driversBody {
         padding-top: 130px;
     }
 
-    .drivers-header {
+    .driversHeader {
         padding: 20px 0;
     }
 
-    .drivers-header h1 {
+    .driversHeader h1 {
         font-size: 24px;
     }
 
-    .drivers-grid {
+    .driversGrid {
         grid-template-columns: 1fr;
         gap: 20px;
     }
 
-    .modal-header {
+    .modalHeader {
         padding: 20px;
     }
 
-    .modal-header h2 {
+    .modalHeader h2 {
         font-size: 1.4rem;
     }
 
-    .modal-content {
+    .modalContent {
         padding: 20px;
     }
 
-    .summary-grid {
+    .summaryGrid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
 
-    .modal-actions {
+    .modalActions {
         flex-direction: column-reverse;
         padding: 0 20px 20px 20px;
     }
 
-    .modal-submit-btn,
-    .modal-cancel-btn {
+    .modalSubmitBtn,
+    .modalCancelBtn {
         width: 100%;
         flex: none;
     }
 }
 
-/* User Summary Bar (Drivers Page) */
-.user-summary-bar {
-    margin: 15px auto 0 auto;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px 20px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    font-size: 0.95rem;
-    backdrop-filter: blur(5px);
-    width: fit-content;
-    max-width: 90%;
-}
-
-.user-summary-bar p {
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.edit-info-link {
-    background: #fdee00;
-    color: #005577;
-    border: none;
-    padding: 6px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.edit-info-link:hover {
-    background: #fff;
-    transform: translateY(-2px);
-}
-
-.edit-info-link .material-icons {
-    font-size: 16px;
-}
-
-@media (max-width: 600px) {
-    .user-summary-bar {
-        flex-direction: column;
-        gap: 8px;
-        border-radius: 15px;
-        padding: 12px;
-    }
-
-    .user-summary-bar p {
-        font-size: 0.85rem;
-        white-space: normal;
-        text-align: center;
-    }
-}
-
-/* Loading State Animations */
-.loading-state {
+.loadingState {
     display: flex;
     flex-direction: column;
     align-items: center;
