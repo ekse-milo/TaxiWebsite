@@ -60,31 +60,66 @@ export function generateWhatsAppLink(ownerPhone: string, bookingData: any, selec
 // ==========================================
 
 export async function upsertCustomerRecord(phone: string, name: string, email: string) {
-    const { data: existing, error: lookupError } = await supabase
+    // 1. Check if a customer already exists with either with particular phone OR particular email
+    const { data: results, error: findError } = await supabase
         .from('customers')
-        .select('phone_number,email')
-        .or(`phone_number.eq.${phone},email.eq.${email}`)
-        .limit(1);
+        .select('phone_number, email')
+        .or(`phone_number.eq.${phone},email.eq.${email}`);
 
-    if (lookupError) throw lookupError;
-
-    if (existing && existing.length > 0) {
-        const matchKey = existing[0].phone_number ? { phone_number: existing[0].phone_number } : { email };
-        const { data, error } = await supabase
-            .from('customers')
-            .update({ phone_number: phone, name, email })
-            .match(matchKey);
-
-        if (error) throw error;
-        return data;
+    if (findError) {
+        console.error("Database lookup failed:", findError);
+        throw findError;
     }
 
-    const { data, error } = await supabase
-        .from('customers')
-        .insert({ phone_number: phone, name, email });
+    // Prioritize the record that matches the phone number to avoid update errors
+    const existing = results && results.length > 0
+        ? (results.find(r => r.phone_number === phone) || results[0])
+        : null;
 
-    if (error) throw error;
-    return data;
+    let result;
+    if (existing) {
+        const matchKey = existing.phone_number
+            ? { phone_number: existing.phone_number }
+            : { email: existing.email };
+
+        const { data, error: updateError } = await supabase
+            .from('customers')
+            .update({ phone_number: phone, name, email })
+            .match(matchKey)
+            .select()
+            .single();
+
+        if (updateError) {
+            // If the update failed (likely an email conflict with another row),
+            // try updating just the name and keeping the original email to bypass the error
+            const { data: fallbackData, error: fallbackError } = await supabase
+                .from('customers')
+                .update({ phone_number: phone, name })
+                .match(matchKey)
+                .select()
+                .single();
+
+            if (fallbackError) throw fallbackError;
+            result = fallbackData;
+        } else {
+            result = data;
+        }
+    } else {
+        // If user don't exist create a new record
+        const { data, error: insertError } = await supabase
+            .from('customers')
+            .insert({ phone_number: phone, name, email })
+            .select()
+            .single();
+
+        if (insertError) {
+            console.error("Insert failed:", insertError);
+            throw insertError;
+        }
+        result = data;
+    }
+
+    return result;
 }
 
 export async function createBookingRecord(bookingPayload: any) {
