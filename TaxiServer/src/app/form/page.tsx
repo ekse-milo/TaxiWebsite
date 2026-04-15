@@ -250,6 +250,14 @@ function FormContent() {
                             Please fix the errors in red to continue
                         </p>
                     )}
+
+                    <br/><br/>
+                    <a href='/'><button
+                        className="home-btn "
+                        // style={{ width: '100%', maxWidth: '400px' }}
+                    >
+                        Home
+                    </button></a>
                 </div>
             </section>
 

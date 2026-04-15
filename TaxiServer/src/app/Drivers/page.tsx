@@ -88,6 +88,14 @@ export default function DriversPage() {
                 )}
             </div>
 
+            <br /><br />
+            <a href='/'><button
+                className="home-btn "
+            // style={{ width: '100%', maxWidth: '400px' }}
+            >
+                Home
+            </button></a>
+
             {selectedDriver && (
                 <div className="modal-overlay" onClick={handleCancelConfirmation}>
                     <div className="summary-modal" onClick={(e) => e.stopPropagation()}>

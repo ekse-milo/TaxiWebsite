@@ -208,7 +208,7 @@
     font-weight: 500;
 }
 
-.submit-btn {
+.submit-btn, .home-btn {
     background-color: #d1d5db;
     color: #fff;
     border: none;
@@ -220,15 +220,30 @@
     transition: all 0.3s ease;
 }
 
-.submit-btn.active {
+.submit-btn.active, .home-btn {
     background: #005577;
     cursor: pointer;
     box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2);
 }
 
-.submit-btn.active:hover {
+.submit-btn.active:hover, .home-btn:hover {
     background: #004466;
     transform: translateY(-2px);
+}
+
+.home_btn {
+    background-color: #d1d5db;
+    color: #fff;
+    border: none;
+    padding: 16px 60px;
+    border-radius: 36px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+    background: #005577;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2);
 }
 
 @media (max-width: 768px) {

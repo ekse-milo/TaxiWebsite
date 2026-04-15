@@ -49,12 +49,12 @@ export default function RootLayout({
         <OfflineBanner />
 
         {/* Instant Offline Check - Prevents landing page flicker */}
-        <script dangerouslySetInnerHTML={{
+        {/* <script dangerouslySetInnerHTML={{
           __html: `
           if (typeof navigator !== 'undefined' && !navigator.onLine) {
             document.body.classList.add('is-offline-initial');
           }
-        ` }} />
+        ` }} /> */}
 
         <div className="main-app-content">
           {children}

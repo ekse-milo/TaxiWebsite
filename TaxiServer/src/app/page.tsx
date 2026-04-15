@@ -61,7 +61,7 @@ export default function Home() {
       <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           <div className="logo">
-            <Image src="/logo.png" alt="Website Logo" height={40} width={40} />
+            <img src="/logo.png" alt="Website Logo" className="website-logo" />
           </div>
 
           <input type="checkbox" id="menu-toggle" className="menu-checkbox" />
