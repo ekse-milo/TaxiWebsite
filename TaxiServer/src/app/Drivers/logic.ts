@@ -15,6 +15,13 @@ export interface Driver {
     experience: string;
 }
 
+export interface Review {
+    id: number;
+    name: string;
+    review: string;
+    rating: number;
+}
+
 
 export const formatDate = (dateString: string): string => {
     if (!dateString) return '';
@@ -145,6 +152,17 @@ export async function fetchDriversRecords() {
     const { data, error } = await supabase
         .from('drivers')
         .select('*');
+
+    if (error) throw error;
+    return data;
+}
+
+export async function fetchReviewsRecords() {
+    const { data, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .order('id', { ascending: false })
+        .limit(3);
 
     if (error) throw error;
     return data;

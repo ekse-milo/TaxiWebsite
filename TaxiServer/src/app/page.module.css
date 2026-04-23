@@ -61,6 +61,15 @@
     object-fit: contain;
 }
 
+.brandName {
+    color: #fdee00;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-left: 12px;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
 /* Hero Section */
 .heroSection {
     min-height: 85vh;
@@ -272,6 +281,14 @@
     font-size: 15px;
 }
 
+.reviewStars {
+    color: #FFD700;
+    font-size: 22px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+    display: block;
+}
+
 /* Footer */
 .footer {
     padding: 80px 20px;
@@ -357,6 +374,10 @@
 }
 
 @media (max-width: 768px) {
+    .brandName {
+        display: none;
+    }
+
     .hamburger {
         display: flex;
         flex-direction: column;

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchVehicleCategories } from "./Drivers/logic";
+import { fetchVehicleCategories, fetchReviewsRecords, Review } from "./Drivers/logic";
 import styles from './page.module.css';
 
 // Helper to map DB names to local image files
@@ -21,7 +21,9 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingReviews, setLoadingReviews] = useState(true);
   const router = useRouter();
 
 
@@ -48,6 +50,21 @@ export default function Home() {
     loadData();
   }, []);
 
+  // Fetch Reviews from Supabase
+  useEffect(() => {
+    async function loadReviews() {
+      try {
+        const data = await fetchReviewsRecords();
+        setReviews(data);
+      } catch (err) {
+        console.error("Failed to load reviews:", err);
+      } finally {
+        setLoadingReviews(false);
+      }
+    }
+    loadReviews();
+  }, []);
+
   // Navigation handler
   const handleBooking = (car: string) => {
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
@@ -65,6 +82,7 @@ export default function Home() {
         <div className={styles.headerContainer}>
           <div className={styles.logo}>
             <img src="/logo.png" alt="Website Logo" className={styles.websiteLogo} />
+            <span className={styles.brandName}>Joshua Alex Moraes Taxi Service</span>
           </div>
 
           <input
@@ -177,26 +195,21 @@ export default function Home() {
         <h2 className={styles.sectionTitle}>TRAVELER STORIES</h2>
 
         <div className={styles.reviewsContainer}>
-          <div className={styles.reviewCard}>
-            <p className={styles.reviewQuote}>
-              &quot;The driver was so polite and the car was spotless.&quot;
-            </p>
-            <p className={styles.reviewAuthor}>- Sarah Jenkins</p>
-          </div>
-
-          <div className={styles.reviewCard}>
-            <p className={styles.reviewQuote}>
-              &quot;Best rates we found for an airport drop.&quot;
-            </p>
-            <p className={styles.reviewAuthor}>- Rahul Verma</p>
-          </div>
-
-          <div className={styles.reviewCard}>
-            <p className={styles.reviewQuote}>
-              &quot;Smooth rides and great recommendations.&quot;
-            </p>
-            <p className={styles.reviewAuthor}>- Mike & Team</p>
-          </div>
+          {loadingReviews ? (
+            <div className={styles.loadingSpinner}>Loading Stories...</div>
+          ) : (
+            reviews.map((r) => (
+              <div key={r.id} className={styles.reviewCard}>
+                <div className={styles.reviewStars}>
+                  {"★".repeat(r.rating || 5)}{"☆".repeat(5 - (r.rating || 5))}
+                </div>
+                <p className={styles.reviewQuote}>
+                  &quot;{r.review}&quot;
+                </p>
+                <p className={styles.reviewAuthor}>- {r.name}</p>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
@@ -204,21 +217,20 @@ export default function Home() {
 
       {/* Footer */}
       <footer id="contact" className={styles.footer}>
-        <h3>Companies Name</h3>
+        <h3>Joshua Alex Moraes Taxi Service</h3>
         <p className={styles.footerTagline}>
           Making your Goan holidays smoother, one ride at a time.
         </p>
 
         <div className={styles.footerContactInfo}>
-          <p><b>Phone: </b>Phone Number</p>
-          <p><b>Email: </b>Email</p>
-          <p><b>Address: </b>Address</p>
+          <p><b>Phone: </b>+91 80074 54465</p>
+          <p><b>Address: </b>Villa No. 8, Shalom Villa, Bamborda, Verna, Goa 403722</p>
         </div>
 
         <p className={styles.footerCopyright}>
-          &copy; All rights reserved.
+          &copy; 2026 Joshua Alex Moraes Taxi Service. All rights reserved.
         </p>
       </footer>
     </>
   );
-}
+}
