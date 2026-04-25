@@ -7,79 +7,97 @@ import { useSearchParams, useRouter } from 'next/navigation';
 // PURE VALIDATION SERVICES (Reusable anywhere)
 // ==========================================
 
-export const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
-
 export const validatePhone = (phone: string): boolean => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
 };
 
-export const checkFormErrors = (formData: any) => {
+export const checkFormErrors = (formData: any, isTimeSelected: boolean) => {
     return {
         name: formData.name.trim().length < 2,
         phone: !validatePhone(formData.phone),
-        email: !validateEmail(formData.email),
         pickup: formData.pickup.trim() === '',
         drop: formData.drop.trim() === '',
-        date: formData.date === ''
+        date: formData.date === '',
+        time: !isTimeSelected
     };
 };
 
 export const isFormFullyValid = (errors: any): boolean => {
-    return !errors.name && !errors.phone && !errors.email && !errors.pickup && !errors.drop && !errors.date;
-};
-
-// ==========================================
-// PURE DATA SERVICES (Reusable Data Handlers)
-// ==========================================
-
-export const saveBookingDataToStorage = (formData: any, carType: string, routeType: string) => {
-    // Combine the time parts into one string for storage
-    const finalTime = `${formData.timeHour}:${formData.timeMinute} ${formData.timePeriod}`;
-
-    const payload = {
-        ...formData,
-        time: finalTime,
-        carType,
-        routeType
-    };
-
-    localStorage.setItem('taxi_booking_data', JSON.stringify(payload));
+    return !errors.name && !errors.phone && !errors.pickup && !errors.drop && !errors.date && !errors.time;
 };
 
 // ==========================================
 // REACT COMPONENT LOGIC (Hook)
 // ==========================================
 
+import { 
+    formatDate, 
+    buildTimestamp, 
+    generateWhatsAppLink, 
+    upsertCustomerRecord, 
+    createBookingRecord 
+} from '../utilities/sharedLogic';
+
 export function useFormLogic() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const carFromUrl = searchParams.get('car') || 'Hatchback';
+    const routeFromUrl = searchParams.get('route') || 'Airport';
+    const isPackageBooking = searchParams.has('route');
 
     const [carType, setCarType] = useState(carFromUrl);
-    const [routeType, setRouteType] = useState('Airport');
+    const [routeType, setRouteType] = useState(routeFromUrl);
     const [showErrors, setShowErrors] = useState(false);
 
-    // Calendar State
+    // Picker States
     const [showCalendar, setShowCalendar] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
+    const [showAirportPicker, setShowAirportPicker] = useState(false);
+    const [isTimeSelected, setIsTimeSelected] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+    const [airportTransferType, setAirportTransferType] = useState<'from' | 'to'>('from');
+
+    // Clear fields if switching to Airport package
+    useEffect(() => {
+        if (routeType === 'Airport') {
+            setFormData(prev => ({ ...prev, pickup: '', drop: '' }));
+        }
+    }, [routeType]);
+
+    const handleAirportTransferTypeChange = (type: 'from' | 'to') => {
+        setAirportTransferType(type);
+        setFormData(prev => ({ ...prev, pickup: '', drop: '' }));
+    };
+
+    // Initial time: 1 hour from now
+    const now = new Date();
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+    let h = oneHourLater.getHours();
+    const p = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    h = h ? h : 12;
+    const hStr = String(h).padStart(2, '0');
+    const m = Math.floor(oneHourLater.getMinutes() / 5) * 5;
+    const mStr = String(m).padStart(2, '0');
 
     // Form inputs state
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
-        email: '',
         pickup: '',
         drop: '',
         date: '',
-        timeHour: '12',
-        timeMinute: '00',
-        timePeriod: 'AM',
+        timeHour: hStr,
+        timeMinute: mStr,
+        timePeriod: p,
         specialRequests: ''
     });
+
+    const [showSummary, setShowSummary] = useState(false);
+    const [showThankYou, setShowThankYou] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const OWNER_PHONE = process.env.NEXT_PUBLIC_OWNER_PHONE || "918007454465";
 
     useEffect(() => {
         if (carFromUrl) setCarType(carFromUrl);
@@ -103,14 +121,33 @@ export function useFormLogic() {
 
     const handleSelectDate = (dateStr: string) => {
         setFormData(prev => ({ ...prev, date: dateStr }));
+        setIsTimeSelected(false); // Reset the time selection when date changes
         closeCalendar();
+    };
+
+    // Time Picker Handlers
+    const openTimePicker = () => setShowTimePicker(true);
+    const closeTimePicker = () => setShowTimePicker(false);
+
+    const openAirportPicker = () => setShowAirportPicker(true);
+    const closeAirportPicker = () => setShowAirportPicker(false);
+
+    const handleSelectTime = (hour: string, minute: string, period: string) => {
+        setFormData(prev => ({
+            ...prev,
+            timeHour: hour,
+            timeMinute: minute,
+            timePeriod: period
+        }));
+        setIsTimeSelected(true);
+        // We don't close immediately to let them refine, or we can close if you prefer
     };
 
     const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
     const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
 
     // Calculate validation state using our Pure Services
-    const errors = checkFormErrors(formData);
+    const errors = checkFormErrors(formData, isTimeSelected);
     const isFormValid = isFormFullyValid(errors);
 
     const handleBooking = () => {
@@ -122,18 +159,65 @@ export function useFormLogic() {
         setShowErrors(true);
 
         if (isFormValid) {
-            // Save using our external service function
-            saveBookingDataToStorage(formData, carType, routeType);
-
-            // Navigate to Drivers page
-            router.push('/Drivers');
+            setShowSummary(true);
         }
+    };
+
+    const handleConfirmBooking = async () => {
+        if (!formData || isSubmitting) return;
+        setIsSubmitting(true);
+
+        try {
+            // 1. Create or Update Customer
+            await upsertCustomerRecord(
+                formData.phone,
+                formData.name
+            );
+
+            // 2. Format precise timestamp
+            const pickupTimestamp = buildTimestamp(
+                formData.date,
+                formData.timeHour,
+                formData.timeMinute,
+                formData.timePeriod
+            );
+
+            // 3. Create Booking Record
+            await createBookingRecord({
+                customer_number: formData.phone,
+                pickup_time: pickupTimestamp,
+                pickup_location: formData.pickup,
+                dropoff_location: formData.drop,
+                route_type: routeType,
+                requested_category: carType,
+                special_requests: formData.specialRequests || null,
+                status: 'pending'
+            });
+
+            // 4. Generate Link & Open WhatsApp
+            const whatsappUrl = generateWhatsAppLink(OWNER_PHONE, {
+                ...formData,
+                carType,
+                routeType
+            });
+            window.open(whatsappUrl, '_blank');
+            setShowSummary(false);
+            setShowThankYou(true);
+
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            alert('Something went wrong. Please check your internet and try again.');
+        }
+
+        setIsSubmitting(false);
     };
 
     return {
         carType,
+        setCarType,
         routeType,
         setRouteType,
+        isPackageBooking,
         formData,
         isFormValid,
         showErrors,
@@ -145,8 +229,25 @@ export function useFormLogic() {
         openCalendar,
         closeCalendar,
         handleSelectDate,
+        showTimePicker,
+        isTimeSelected,
+        openTimePicker,
+        closeTimePicker,
+        handleSelectTime,
+        showAirportPicker,
+        openAirportPicker,
+        closeAirportPicker,
         nextMonth,
         prevMonth,
-        handleBooking
+        handleBooking,
+        showSummary,
+        setShowSummary,
+        showThankYou,
+        setShowThankYou,
+        airportTransferType,
+        handleAirportTransferTypeChange,
+        isSubmitting,
+        handleConfirmBooking,
+        formatDate
     };
 }

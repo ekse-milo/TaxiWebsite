@@ -52,12 +52,15 @@
 .routeOption {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     cursor: pointer;
     color: black;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 30px;
     border: 2px solid #eee;
+    min-width: 180px;
+    white-space: nowrap;
     transition: all 0.3s ease;
 }
 
@@ -72,44 +75,12 @@
     color: white;
 }
 
-.circleCheck {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #005577;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
 
-.routeOption.selected .circleCheck {
-    border-color: white;
-    background: white;
-}
 
-.circleCheck::after {
-    content: '';
-    width: 10px;
-    height: 10px;
-    background: #005577;
-    border-radius: 50%;
-    display: none;
-}
-
-.routeOption.selected .circleCheck::after {
-    display: block;
-}
-
-.userColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
 
 .addressRow {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 20px;
 }
 
@@ -130,6 +101,7 @@
 }
 
 .inputBox input,
+.inputBox select,
 .inputBox textarea {
     flex: 1;
     border: none;
@@ -139,17 +111,14 @@
     background: transparent;
     color: #333;
     resize: none;
+    font-family: inherit;
 }
 
 .inputBox textarea {
     height: 80px;
 }
 
-.swapIcon {
-    font-size: 32px;
-    cursor: pointer;
-    color: #005577;
-}
+
 
 .dateTimeRow {
     display: flex;
@@ -198,12 +167,17 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    position: relative;
+    padding-bottom: 20px; /* Space for absolute error message */
+    width: 100%;
 }
 
 .errorMsg {
     color: #d32f2f;
     font-size: 0.75rem;
-    margin: 0 0 0 15px;
+    position: absolute;
+    bottom: 0;
+    left: 15px;
     font-weight: 500;
 }
 
@@ -211,7 +185,7 @@
     background-color: #d1d5db;
     color: #fff;
     border: none;
-    padding: 16px 60px;
+    padding: 16px 40px;
     border-radius: 36px;
     font-size: 18px;
     font-weight: bold;
@@ -237,6 +211,8 @@
 
     .addressRow {
         flex-direction: column;
+        gap: 15px;
+        width: 100%;
     }
 
     .routeSelectionContainer {
@@ -362,5 +338,286 @@
 
     to {
         opacity: 1;
+    }
+}
+
+/* Blur effect for background */
+.formWrapper {
+    transition: filter 0.3s ease;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.blurred {
+    filter: blur(10px) grayscale(20%);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Summary Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-start; /* Changed to flex-start for scrolling */
+    justify-content: center;
+    z-index: 3000;
+    animation: fadeIn 0.3s ease;
+    cursor: pointer;
+    overflow-y: auto; /* Added for scrollability */
+    padding: 40px 0; /* Vertical breathing room */
+}
+
+.summaryCard {
+    background: white;
+    width: 90%;
+    max-width: 550px;
+    border-radius: 25px;
+    padding: 0;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.cardHeader {
+    background: #005577;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.cardHeader h2 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.cardSubtitle {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.cardContent {
+    padding: 30px;
+}
+
+.summarySection {
+    margin-bottom: 25px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 5px solid #005577;
+}
+
+.summarySection h4 {
+    margin: 0 0 15px 0;
+    color: #005577;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.summaryGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.summaryItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.summaryLabel {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.summaryValue {
+    color: #222;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.cardActions {
+    display: flex;
+    gap: 15px;
+    padding: 0 30px 30px 30px;
+}
+
+.cancelBtn {
+    flex: 1;
+    padding: 14px 0;
+    border-radius: 15px;
+    border: 2px solid #ddd;
+    background: #fff;
+    color: #555;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancelBtn:hover {
+    background: #f8f8f8;
+    border-color: #ccc;
+}
+
+.summarySubmitBtn {
+    flex: 1.5;
+    padding: 14px 0;
+    border-radius: 15px;
+    border: none;
+    background: linear-gradient(135deg, #005577 0%, #0088aa 100%);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 85, 119, 0.2);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.summarySubmitBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 85, 119, 0.3);
+}
+
+@media (max-width: 768px) {
+    .summaryGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cardActions {
+        flex-direction: column-reverse;
+    }
+}
+
+.timePickerGrid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 150px; /* Exactly 3 items high (50px each) */
+    margin: 20px 0;
+    background: #f8f9fa;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.selectionHighlight {
+    position: absolute;
+    top: 50px;
+    left: 8px;
+    right: 8px;
+    height: 50px;
+    background: rgba(0, 85, 119, 0.08);
+    border-top: 1.5px solid #005577;
+    border-bottom: 1.5px solid #005577;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.timePickerColumn {
+    flex: 1;
+    height: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+    padding: 0;
+}
+
+.timePickerColumn::-webkit-scrollbar {
+    display: none;
+}
+
+.timePickerItem {
+    height: 50px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: 1.1rem;
+    color: #bbb;
+    transition: all 0.2s;
+    scroll-snap-align: center;
+    cursor: pointer;
+}
+
+.timePickerItem.timeSelected {
+    color: #005577;
+    font-weight: 800;
+    font-size: 1.4rem;
+}
+
+.drumSpacer {
+    height: 50px;
+    min-height: 50px;
+    width: 100%;
+}
+
+.timePickerItem.disabled {
+    color: #ccc;
+    text-decoration: line-through;
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.formActionsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 30px;
+    width: 100%;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 25px;
+}
+
+.smallErrorMsg {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 10px;
+}
+
+@media (max-width: 480px) {
+    .formActionsRow {
+        flex-direction: column-reverse;
+        gap: 15px;
+        align-items: stretch;
+    }
+    .formActionsRow a {
+        width: 100%;
+        display: block;
+    }
+    .submitBtn, .homeBtn {
+        width: 100%;
+        padding: 16px 20px;
     }
 }

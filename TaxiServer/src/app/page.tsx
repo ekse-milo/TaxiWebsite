@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchVehicleCategories, fetchReviewsRecords, Review } from "./Drivers/logic";
+import { fetchVehicleCategories, fetchReviewsRecords, Review } from "./utilities/sharedLogic";
 import styles from './page.module.css';
 
 // Helper to map DB names to local image files
@@ -29,13 +29,16 @@ export default function Home() {
 
   // Scroll effect
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      const scrollPos = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolled(scrollPos > 10); // Lower threshold for mobile responsiveness
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial position
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch Categories from Supabase
+  // Fetch Categories
   useEffect(() => {
     async function loadData() {
       try {
@@ -50,7 +53,26 @@ export default function Home() {
     loadData();
   }, []);
 
-  // Fetch Reviews from Supabase
+  // Scroll effect using IntersectionObserver for maximum mobile reliability
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // isIntersecting means the trigger is visible at the top
+        setIsScrolled(!entry.isIntersecting);
+      },
+      { 
+        // We want to trigger as soon as the top element starts leaving the view
+        threshold: [0.99] 
+      }
+    );
+
+    const trigger = document.getElementById('scroll-trigger');
+    if (trigger) observer.observe(trigger);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Fetch Reviews
   useEffect(() => {
     async function loadReviews() {
       try {
@@ -66,22 +88,28 @@ export default function Home() {
   }, []);
 
   // Navigation handler
-  const handleBooking = (car: string) => {
+  const handleBooking = (car: string, route?: string) => {
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
       window.dispatchEvent(new CustomEvent('startConnectionCheck', { detail: { duration: 3000 } }));
       return;
     }
-    router.push(`/form?car=${encodeURIComponent(car)}`);
+    const url = route
+      ? `/form?car=${encodeURIComponent(car)}&route=${encodeURIComponent(route)}`
+      : `/form?car=${encodeURIComponent(car)}`;
+    router.push(url);
   };
 
   return (
     <>
+      {/* Invisible element to trigger scroll state */}
+      <div id="scroll-trigger" style={{ position: 'absolute', top: 0, left: 0, height: '10px', width: '1px', pointerEvents: 'none', visibility: 'hidden' }}></div>
+
       {/* Header */}
       <header className={`${styles.header} ${isScrolled || isMenuOpen ? styles.scrolled : ''}`}>
 
         <div className={styles.headerContainer}>
           <div className={styles.logo}>
-            <img src="/logo.png" alt="Website Logo" className={styles.websiteLogo} />
+            <img src="/assets/logo.png" alt="Website Logo" className={styles.websiteLogo} />
             <span className={styles.brandName}>Joshua Alex Moraes Taxi Service</span>
           </div>
 
@@ -100,6 +128,7 @@ export default function Home() {
           </label>
 
           <nav className={styles.nav}>
+            <div className={styles.mobileBrandName}>Joshua Alex Moraes Taxi Service</div>
             <a href="#packages" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>PACKAGES</a>
             <a href="#cars" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>OUR FLEET</a>
             <a href="#reviews" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>REVIEWS</a>
@@ -133,6 +162,13 @@ export default function Home() {
             <p className={styles.packageDesc}>
               Hassle-free pickup and drop to Dabolim or Mopa Airport.
             </p>
+            <button
+              className={styles.btnOutline}
+              onClick={() => handleBooking('Sedan', 'Airport')}
+              style={{ marginTop: '15px' }}
+            >
+              Book
+            </button>
           </div>
 
           <div className={styles.packageCard}>
@@ -140,6 +176,13 @@ export default function Home() {
             <p className={styles.packageDesc}>
               Explore Panjim, Old Goa Churches, and Shopping streets.
             </p>
+            <button
+              className={styles.btnOutline}
+              onClick={() => handleBooking('Sedan', 'City Tour')}
+              style={{ marginTop: '15px' }}
+            >
+              Book
+            </button>
           </div>
 
           <div className={styles.packageCard}>
@@ -147,6 +190,13 @@ export default function Home() {
             <p className={styles.packageDesc}>
               North or South Goa beaches, Forts, and Waterfalls.
             </p>
+            <button
+              className={styles.btnOutline}
+              onClick={() => handleBooking('Sedan', 'Sightseeing')}
+              style={{ marginTop: '15px' }}
+            >
+              Book
+            </button>
           </div>
         </div>
       </section>
@@ -171,6 +221,7 @@ export default function Home() {
                   alt={cat.category_name}
                   height={100}
                   width={150}
+                  priority
                 />
 
                 <h3 className={styles.nameColor}>{cat.category_name}</h3>

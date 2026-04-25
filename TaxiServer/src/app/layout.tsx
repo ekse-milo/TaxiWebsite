@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import OfflineBanner from "./connection/OfflineBanner";
-import SessionManager from "./utilities/SessionManager";
 import Script from "next/script";
 
 const geistSans = Geist({
@@ -46,8 +45,6 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
-        {/* Session & Connection Management */}
-        <SessionManager />
         <OfflineBanner />
 
         {/* Instant Offline Check - Prevents landing page flicker */}

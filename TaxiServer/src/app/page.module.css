@@ -10,11 +10,18 @@
     z-index: 9999;
     width: 100%;
     transition: all 0.3s ease;
+    /* Force GPU acceleration for smooth rendering on mobile */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 .header.scrolled {
-    background-color: #005577;
+    background-color: #005577 !important;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+    /* Shrink vertically */
 }
 
 .headerContainer {
@@ -29,8 +36,11 @@
 
 .nav {
     display: flex;
-    flex-wrap: wrap;
     justify-content: flex-end;
+}
+
+.mobileBrandName {
+    display: none;
 }
 
 .navLink {
@@ -158,10 +168,19 @@
 
 .carsContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
     gap: 30px;
     margin: 0 auto;
+    overflow-x: auto;
+    padding: 20px 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.carsContainer::before,
+.carsContainer::after {
+    content: '';
+    margin: auto;
 }
 
 .carCard {
@@ -171,11 +190,12 @@
     min-height: 450px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    flex: 1 1 300px;
+    flex: 0 0 300px;
     max-width: 360px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    scroll-snap-align: center;
 }
 
 .carCard:hover {
@@ -212,11 +232,20 @@
 
 .packagesContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
     gap: 30px;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
+    overflow-x: auto;
+    padding: 20px 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.packagesContainer::before,
+.packagesContainer::after {
+    content: '';
+    margin: auto;
 }
 
 .packageCard {
@@ -225,8 +254,9 @@
     padding: 35px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    flex: 1 1 300px;
+    flex: 0 0 300px;
     max-width: 360px;
+    scroll-snap-align: center;
 }
 
 .packageCard:hover {
@@ -248,11 +278,20 @@
 
 .reviewsContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
     gap: 30px;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
+    overflow-x: auto;
+    padding: 20px 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.reviewsContainer::before,
+.reviewsContainer::after {
+    content: '';
+    margin: auto;
 }
 
 .reviewCard {
@@ -261,8 +300,9 @@
     padding: 35px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    flex: 1 1 300px;
+    flex: 0 0 300px;
     max-width: 360px;
+    scroll-snap-align: center;
 }
 
 .reviewCard:hover {
@@ -326,56 +366,16 @@
     display: none;
 }
 
-@media (max-width: 900px) {
-    .carsContainer {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        justify-content: flex-start;
-        scroll-snap-type: x mandatory;
-        padding: 0 20px 20px 20px;
-        -webkit-overflow-scrolling: touch;
-    }
 
-    .packagesContainer {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        justify-content: flex-start;
-        scroll-snap-type: x mandatory;
-        padding: 0 20px 20px 20px;
-        -webkit-overflow-scrolling: touch;
-    }
 
-    .reviewsContainer {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        justify-content: flex-start;
-        scroll-snap-type: x mandatory;
-        padding: 0 20px 20px 20px;
-        -webkit-overflow-scrolling: touch;
-    }
+@media (max-width: 1100px) {
 
-    .carCard {
-        flex: 0 0 290px;
-        max-width: 290px;
-        scroll-snap-align: center;
-    }
-
-    .packageCard {
-        flex: 0 0 290px;
-        max-width: 290px;
-        scroll-snap-align: center;
-    }
-
-    .reviewCard {
-        flex: 0 0 290px;
-        max-width: 290px;
-        scroll-snap-align: center;
-    }
-}
-
-@media (max-width: 768px) {
+    /* At 1100px, options hide and hamburger appears, but brandName stays */
     .brandName {
-        display: none;
+        display: block;
+        /* Keep visible */
+        font-size: 1.1rem;
+        /* Slightly smaller for tablets */
     }
 
     .hamburger {
@@ -399,21 +399,6 @@
 
     .header {
         padding: 15px 20px;
-    }
-
-    .heroSection {
-        padding: 80px 15px;
-        background-position: center;
-        min-height: auto;
-    }
-
-    .heroTitle {
-        margin-bottom: 5px;
-    }
-
-    .heroText {
-        margin-top: 15px;
-        line-height: 1.4;
     }
 
     .headerContainer {
@@ -440,25 +425,66 @@
         z-index: 999;
     }
 
-    .menuCheckbox:checked ~ .nav {
+    .mobileBrandName {
+        display: block;
+        color: #FFF176;
+        font-weight: 700;
+        font-size: 1.2rem;
+        padding: 20px 0 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        width: 80%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .menuCheckbox:checked~.nav {
         max-height: 500px;
         padding: 20px 0;
     }
 
-    .menuCheckbox:checked + .hamburger span:nth-child(1) {
+    .menuCheckbox:checked+.hamburger span:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
     }
 
-    .menuCheckbox:checked + .hamburger span:nth-child(2) {
+    .menuCheckbox:checked+.hamburger span:nth-child(2) {
         opacity: 0;
     }
 
-    .menuCheckbox:checked + .hamburger span:nth-child(3) {
+    .menuCheckbox:checked+.hamburger span:nth-child(3) {
         transform: translateY(-9px) rotate(-45deg);
     }
 
     .navLink {
         font-size: 20px;
         margin: 15px 0;
+    }
+}
+
+@media (max-width: 600px) {
+
+    /* At 600px, the brandName finally hides from the header */
+    .brandName {
+        display: none;
+    }
+}
+/* Mobile Scroll Indicators - Peeking Cards */
+@media (max-width: 600px) {
+    .carCard, .packageCard, .reviewCard {
+        flex: 0 0 82% !important; 
+        scroll-snap-align: start !important;
+        min-width: 280px;
+    }
+    
+    .carsContainer, .packagesContainer, .reviewsContainer {
+        padding: 20px !important;
+        scroll-padding: 20px;
+        justify-content: flex-start !important;
+    }
+
+    /* Remove the auto-centering spacers on mobile to allow cards to align to the left and peek */
+    .carsContainer::before, .carsContainer::after,
+    .packagesContainer::before, .packagesContainer::after,
+    .reviewsContainer::before, .reviewsContainer::after {
+        display: none !important;
     }
 }
