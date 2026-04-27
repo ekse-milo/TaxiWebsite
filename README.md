@@ -1,2 +1,2 @@
 # TaxiWebsite
-A database backed website to book taxis
+A website to browse available taxi services and initialize booking
