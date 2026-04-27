@@ -1,2 +1,2 @@
 # TaxiWebsite
-A website to browse available taxi servises and initialize booking
+A website to browse available taxi services and initialize booking
