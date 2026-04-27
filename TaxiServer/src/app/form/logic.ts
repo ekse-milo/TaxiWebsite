@@ -36,19 +36,51 @@ import {
     buildTimestamp, 
     generateWhatsAppLink, 
     upsertCustomerRecord, 
-    createBookingRecord 
+    createBookingRecord,
+    fetchVehicleCategories,
+    fetchPackages
 } from '../utilities/sharedLogic';
 
 export function useFormLogic() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const carFromUrl = searchParams.get('car') || 'Hatchback';
-    const routeFromUrl = searchParams.get('route') || 'Airport';
+    const routeFromUrl = searchParams.get('route') || 'Airport Transfer';
     const isPackageBooking = searchParams.has('route');
 
     const [carType, setCarType] = useState(carFromUrl);
     const [routeType, setRouteType] = useState(routeFromUrl);
     const [showErrors, setShowErrors] = useState(false);
+
+    // Dynamic data from CSV
+    const [carTypes, setCarTypes] = useState<string[]>(['Hatchback', 'Sedan', 'MUV', 'SUV']);
+    const [routes, setRoutes] = useState<string[]>(['Airport', 'Sightseeing', 'City Tour']);
+
+    useEffect(() => {
+        const loadData = async () => {
+            const taxis = await fetchVehicleCategories();
+            if (taxis && taxis.length > 0) {
+                const fetchedTaxis = taxis.map(t => t.category_name);
+                setCarTypes(fetchedTaxis);
+                if (!fetchedTaxis.includes(carType)) {
+                    setCarType(fetchedTaxis[0]);
+                }
+            }
+            
+            const packages = await fetchPackages();
+            if (packages && packages.length > 0) {
+                const fetchedRoutes = packages.map(p => p.package);
+                setRoutes(fetchedRoutes);
+                
+                // If the current routeType (from URL or hardcoded default) is not in the fetched routes,
+                // and we have fetched routes, then default to the first one.
+                if (!fetchedRoutes.includes(routeType)) {
+                    setRouteType(fetchedRoutes[0]);
+                }
+            }
+        };
+        loadData();
+    }, []);
 
     // Picker States
     const [showCalendar, setShowCalendar] = useState(false);
@@ -60,7 +92,7 @@ export function useFormLogic() {
 
     // Clear fields if switching to Airport package
     useEffect(() => {
-        if (routeType === 'Airport') {
+        if (routeType.toLowerCase().includes('airport')) {
             setFormData(prev => ({ ...prev, pickup: '', drop: '' }));
         }
     }, [routeType]);
@@ -248,6 +280,8 @@ export function useFormLogic() {
         handleAirportTransferTypeChange,
         isSubmitting,
         handleConfirmBooking,
-        formatDate
+        formatDate,
+        carTypes,
+        routes
     };
 }

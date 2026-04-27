@@ -46,7 +46,9 @@ function FormContent() {
         airportTransferType,
         handleAirportTransferTypeChange,
         handleConfirmBooking,
-        formatDate
+        formatDate,
+        carTypes,
+        routes
     } = useFormLogic();
 
     const hourRef = useRef<HTMLDivElement>(null);
@@ -159,8 +161,6 @@ function FormContent() {
     const displayDate = formData.date
         ? formatDate(formData.date)
         : 'Select Date';
-    const routes = ['Airport', 'Sightseeing', 'City Tour'];
-    const carTypes = ['Hatchback', 'Sedan', 'MUV', 'SUV'];
 
     return (
         <>
@@ -209,7 +209,7 @@ function FormContent() {
                             </div>
                         )}
 
-                        {routeType === 'Airport' && (
+                        {routeType.toLowerCase().includes('airport') && (
                             <div className={styles.routeSelectionContainer} style={{ marginTop: '0', padding: '15px', background: '#f8f9fa', borderRadius: '15px', marginBottom: '20px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
                                     <div
@@ -265,11 +265,11 @@ function FormContent() {
                             <div className={styles.inputGroup} style={{ flex: 1 }}>
                                 <label
                                     className={`${styles.inputBox} ${showErrors && errors.pickup ? styles.hasError : ''}`}
-                                    onClick={() => (routeType === 'Airport' && airportTransferType === 'from') && openAirportPicker()}
-                                    style={{ cursor: (routeType === 'Airport' && airportTransferType === 'from') ? 'pointer' : 'text' }}
+                                    onClick={() => (routeType.toLowerCase().includes('airport') && airportTransferType === 'from') && openAirportPicker()}
+                                    style={{ cursor: (routeType.toLowerCase().includes('airport') && airportTransferType === 'from') ? 'pointer' : 'text' }}
                                 >
-                                    <span className="material-icons" style={{ color: '#005577' }}>{airportTransferType === 'from' && routeType === 'Airport' ? 'flight_land' : 'place'}</span>
-                                    {(routeType === 'Airport' && airportTransferType === 'from') ? (
+                                    <span className="material-icons" style={{ color: '#005577' }}>{airportTransferType === 'from' && routeType.toLowerCase().includes('airport') ? 'flight_land' : 'place'}</span>
+                                    {(routeType.toLowerCase().includes('airport') && airportTransferType === 'from') ? (
                                         <span style={{ flex: 1, padding: '8px 10px', color: formData.pickup ? '#333' : '#999' }}>
                                             {formData.pickup || 'Select Airport'}
                                         </span>
@@ -289,11 +289,11 @@ function FormContent() {
                             <div className={styles.inputGroup} style={{ flex: 1 }}>
                                 <label
                                     className={`${styles.inputBox} ${showErrors && errors.drop ? styles.hasError : ''}`}
-                                    onClick={() => (routeType === 'Airport' && airportTransferType === 'to') && openAirportPicker()}
-                                    style={{ cursor: (routeType === 'Airport' && airportTransferType === 'to') ? 'pointer' : 'text' }}
+                                    onClick={() => (routeType.toLowerCase().includes('airport') && airportTransferType === 'to') && openAirportPicker()}
+                                    style={{ cursor: (routeType.toLowerCase().includes('airport') && airportTransferType === 'to') ? 'pointer' : 'text' }}
                                 >
-                                    <span className="material-icons" style={{ color: '#005577' }}>{airportTransferType === 'to' && routeType === 'Airport' ? 'flight_takeoff' : 'place'}</span>
-                                    {(routeType === 'Airport' && airportTransferType === 'to') ? (
+                                    <span className="material-icons" style={{ color: '#005577' }}>{airportTransferType === 'to' && routeType.toLowerCase().includes('airport') ? 'flight_takeoff' : 'place'}</span>
+                                    {(routeType.toLowerCase().includes('airport') && airportTransferType === 'to') ? (
                                         <span style={{ flex: 1, padding: '8px 10px', color: formData.drop ? '#333' : '#999' }}>
                                             {formData.drop || 'Select Airport'}
                                         </span>

@@ -1,7 +1,6 @@
 'use client';
 
 export interface Review {
-    id: number;
     name: string;
     review: string;
     rating: number;
@@ -97,10 +96,7 @@ export async function fetchVehicleCategories() {
     } catch (err) {
         console.error("CSV Fetch Error:", err);
         return [
-            { category_name: 'Hatchback', base_price: 1500 },
-            { category_name: 'Sedan', base_price: 2000 },
-            { category_name: 'MUV', base_price: 2500 },
-            { category_name: 'SUV', base_price: 3000 }
+            { category_name: 'Offline-Taxi', base_price: 0 }
         ];
     }
 }
@@ -111,8 +107,7 @@ export async function fetchReviewsRecords() {
         const csvText = await response.text();
         const data = parseCSV(csvText);
         const lastThree = data.slice(-3);
-        return lastThree.map((item: any, index: number) => ({
-            id: index + 1,
+        return lastThree.map((item: any) => ({
             name: item.name,
             review: item.review,
             rating: parseInt(item.rating)
@@ -120,9 +115,24 @@ export async function fetchReviewsRecords() {
     } catch (err) {
         console.error("CSV Fetch Error:", err);
         return [
-            { id: 1, name: 'Rahul Desai', review: 'Great experience! The ride was comfortable and on time.', rating: 5 },
-            { id: 2, name: 'Priya Sharma', review: 'Comfortable ride from the airport. Clean car.', rating: 4 },
-            { id: 3, name: 'Vikram Singh', review: 'Excellent sightseeing tour. Knew all the best spots.', rating: 5 }
+            { rating: 0, review: 'System reviews are currently offline.', name: 'System Admin' }
+        ];
+    }
+}
+
+export async function fetchPackages() {
+    try {
+        const response = await fetch('/data/packages.csv');
+        const csvText = await response.text();
+        const data = parseCSV(csvText);
+        return data.map((item: any) => ({
+            package: item.package,
+            description: item.description
+        }));
+    } catch (err) {
+        console.error('CSV Fetch Error:', err);
+        return [
+            { package: 'Offline-Package', description: 'Package details are currently unavailable.' }
         ];
     }
 }

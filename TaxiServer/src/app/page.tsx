@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchVehicleCategories, fetchReviewsRecords, Review } from "./utilities/sharedLogic";
+import { fetchVehicleCategories, fetchReviewsRecords, fetchPackages, Review } from "./utilities/sharedLogic";
 import styles from './page.module.css';
 
 // Helper to map DB names to local image files
@@ -21,8 +21,10 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [packages, setPackages] = useState<any[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingPackages, setLoadingPackages] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
   const router = useRouter();
 
@@ -51,6 +53,21 @@ export default function Home() {
       }
     }
     loadData();
+  }, []);
+
+  // Fetch Packages
+  useEffect(() => {
+    async function loadPackages() {
+      try {
+        const data = await fetchPackages();
+        setPackages(data);
+      } catch (err) {
+        console.error("Failed to load packages:", err);
+      } finally {
+        setLoadingPackages(false);
+      }
+    }
+    loadPackages();
   }, []);
 
   // Scroll effect using IntersectionObserver for maximum mobile reliability
@@ -157,47 +174,25 @@ export default function Home() {
         </p>
 
         <div className={styles.packagesContainer}>
-          <div className={styles.packageCard}>
-            <h3 className={styles.nameColor}>Airport Transfer</h3>
-            <p className={styles.packageDesc}>
-              Hassle-free pickup and drop to Dabolim or Mopa Airport.
-            </p>
-            <button
-              className={styles.btnOutline}
-              onClick={() => handleBooking('Sedan', 'Airport')}
-              style={{ marginTop: '15px' }}
-            >
-              Book
-            </button>
-          </div>
-
-          <div className={styles.packageCard}>
-            <h3 className={styles.nameColor}>City Tour</h3>
-            <p className={styles.packageDesc}>
-              Explore Panjim, Old Goa Churches, and Shopping streets.
-            </p>
-            <button
-              className={styles.btnOutline}
-              onClick={() => handleBooking('Sedan', 'City Tour')}
-              style={{ marginTop: '15px' }}
-            >
-              Book
-            </button>
-          </div>
-
-          <div className={styles.packageCard}>
-            <h3 className={styles.nameColor}>Sightseeing</h3>
-            <p className={styles.packageDesc}>
-              North or South Goa beaches, Forts, and Waterfalls.
-            </p>
-            <button
-              className={styles.btnOutline}
-              onClick={() => handleBooking('Sedan', 'Sightseeing')}
-              style={{ marginTop: '15px' }}
-            >
-              Book
-            </button>
-          </div>
+          {loadingPackages ? (
+            <div className={styles.loadingSpinner}>Loading Packages...</div>
+          ) : (
+            packages.map((pkg) => (
+              <div key={pkg.package} className={styles.packageCard}>
+                <h3 className={styles.nameColor}>{pkg.package}</h3>
+                <p className={styles.packageDesc}>
+                  {pkg.description}
+                </p>
+                <button
+                  className={styles.btnOutline}
+                  onClick={() => handleBooking('Sedan', pkg.package)}
+                  style={{ marginTop: '15px' }}
+                >
+                  Book
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
@@ -249,8 +244,8 @@ export default function Home() {
           {loadingReviews ? (
             <div className={styles.loadingSpinner}>Loading Stories...</div>
           ) : (
-            reviews.map((r) => (
-              <div key={r.id} className={styles.reviewCard}>
+            reviews.map((r, index) => (
+              <div key={index} className={styles.reviewCard}>
                 <div className={styles.reviewStars}>
                   {"★".repeat(r.rating || 5)}{"☆".repeat(5 - (r.rating || 5))}
                 </div>
