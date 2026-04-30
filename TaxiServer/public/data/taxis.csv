@@ -1,5 +1,5 @@
 type,rate_per_hour
-Hatchback,1500
-Sedan,2000
-MUV,2500
-SUV,3000
+Hatchback,3000
+Sedan,3200
+MUV,3700
+SUV,4500
